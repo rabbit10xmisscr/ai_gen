@@ -1,0 +1,147 @@
+<!DOCTYPE html><html><head>
+    <title>DMP-SSO</title>
+    <link rel="shortcut icon" type="image/png" href="https://dmp.vtscloud.vn/static/appbuilder/img/icon.png">
+
+    
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+    
+    
+        <link href="https://dmp.vtscloud.vn/static/appbuilder/css/bootstrap.min.css?version=1.5" rel="stylesheet">
+        <link href="https://dmp.vtscloud.vn/static/appbuilder/css/font-awesome.min.css?version=1.5" rel="stylesheet">
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="https://dmp.vtscloud.vn/static/appbuilder/js/html5shiv.js?version=1.5"></script>
+            <script src="https://dmp.vtscloud.vn/static/appbuilder/js/respond.min.js?version=1.5"></script>
+         <![endif]-->
+
+        <link href="https://dmp.vtscloud.vn/static/appbuilder/css/custom.css?version=1.5" rel="stylesheet">
+        
+        
+    
+
+    
+    <script>
+        window['crsfToken'] = 'ImQzN2EzMzAzMzM2NWYzMDZkZjBhY2FkNDc0MTVlZWFkMTBjODkyZmQi.ajuX3w.z-HVZxnRhojjAYGuRakZxzeXyv8'
+    </script>
+        <script src="https://dmp.vtscloud.vn/static/appbuilder/js/jquery-latest.js?version=1.5"></script>
+    
+</head>
+
+<body class="layout">
+
+
+
+    <div class="container">
+      <div class="row">
+          
+            
+    
+
+          
+          
+    <script type="text/javascript">
+        var baseLoginOauthUrl = "/login_oauth/";
+        var service = "?service="
+        var next = "next="
+
+        function login_oauth(provider) {
+            window.location.href = baseLoginOauthUrl + provider + service + "&" +  next;
+        }
+    </script>
+
+    
+
+    <div class="container" style="padding-top: 100px">
+        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="panel-title">
+        <div class="logo-text" style="text-align: center; font-size: 20px; font-weight: bold; color: #ce7a58; text-transform: uppercase; margin: 10px 0px;">
+            Hệ Thống Tổng Hợp, Phân Tích Và <br> Trực Quan Hóa Dữ Liệu
+        </div>
+    </div>
+                </div>
+                <div style="padding-top:10px" class="panel-body">
+                    <!-- Modal totp-->
+                    
+                    <form class="form" autocomplete="off" action="" method="post" name="login" id="form-login">
+                        
+                        
+                        <input type="hidden" name="layout" value="">
+                        <input type="hidden" name="step" value="login">
+                        <div class="control-group">
+                            <label class="control-label" for="openid">Tên đăng nhập:</label>
+
+                            <div class="controls">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    <input autocomplete="off" class="form-control" id="username" name="username" required="" size="80" type="text" value="">
+                                </div>
+                                
+                                <label class="control-label" for="openid">Mật khẩu:</label>
+
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                    <input autocomplete="off" class="form-control" id="password" name="password" required="" size="80" type="password" value="">
+                                </div>
+                                
+                                
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="controls">
+                                <br>
+                                <div>
+                                    <input class="btn btn-primary btn-block" type="submit" value="Đăng nhập">
+
+
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px">
+                          <p style="text-align: center;font-size: 12px;color: #879399;">hoặc đăng nhập với</p>
+                            
+                            <a onclick="login_oauth('keycloak');" class="btn btn-primary btn-block" type="submit" style="background-color: #E50000;border-color: #E50000">
+                                SSO BXD
+                                <i id="keycloak" class="provider-select fa fa-key fa-1x"></i>
+                            </a>
+                            
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <a class="sso-btn-footer sso-user-manual" href="/user_manual/">
+            <i class="fa fa-book"></i>
+        </a>
+    </div>
+
+
+
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+<script src="https://dmp.vtscloud.vn/static/appbuilder/js/crypto-js.min.js?version=1.5"></script>
+<script src="https://dmp.vtscloud.vn/static/appbuilder/js/login.js?version=1.5"></script>
+<script src="https://dmp.vtscloud.vn/static/appbuilder/js/totp.js?version=1.5"></script>
+
+
+
+</body></html>

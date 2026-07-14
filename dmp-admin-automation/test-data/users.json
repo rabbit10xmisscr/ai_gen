@@ -1,0 +1,16 @@
+{
+  "invalidUsers": [
+    {
+      "scenario": "Sai mật khẩu",
+      "username": "admin",
+      "password": "wrongpassword123",
+      "expectedError": "Tên đăng nhập hoặc mật khẩu không đúng."
+    },
+    {
+      "scenario": "Tài khoản không tồn tại",
+      "username": "notfounduser",
+      "password": "password123",
+      "expectedError": "Tên đăng nhập hoặc mật khẩu không đúng."
+    }
+  ]
+}

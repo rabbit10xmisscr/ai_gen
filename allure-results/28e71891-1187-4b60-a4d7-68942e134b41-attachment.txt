@@ -1,0 +1,5 @@
+2026-06-29 12:40:30 [INFO]: Start Test Setup: Navigate to base URL
+2026-06-29 12:40:48 [INFO]: Typing "admin" into Username Input
+2026-06-29 12:40:48 [INFO]: Typing "admin_password" into Password Input
+2026-06-29 12:40:48 [INFO]: Clicking on Login Button
+2026-06-29 12:40:48 [INFO]: Verified login successfully

@@ -1,0 +1,9 @@
+Hãy sử dụng các thông tin dưới đây để thực hiện nhiệm vụ:
+- {{TEN_MODULE}}: [Điền tên module, VD: Data Quality / Ingestion]
+- {{FILE_KBKT_HIEN_TAI}}: [Điền tên file KBKT gốc, VD: Ingestion.xlsx]
+- {{FILE_TKCT_FE}}: [Điền tên file TKCT FE, VD: QT9.5.1.BM.04_Thiet ke chi tiet_Module chức năng Ingestion_FE.docx]
+- {{FILE_TKCT_API}}: [Điền tên file API Spec, VD: QT9.5.1.BM.04_Thiet ke chi tiet_Module Tính năng Ingestion (API).docx]
+- {{FILE_DANH_SACH_USE_CASE}}: [Điền tên file list Use Case, VD: ULNL License Nâng cấp DMP 2025 QLCL check.xlsx]
+- {{FILE_KBKT_CAN_CAP_NHAT}}: [Điền tên file KBKT đích, VD: (UC347-560)DataQuality v1.0.xlsx]
+- {{GIA_TRI_COT_LOAI}}: [Điền điều kiện lọc cột Loại, VD: Data Quality]
+- {{GIA_TRI_COT_KBKT}}: [Điền điều kiện lọc cột KBKT, VD: Chưa có]

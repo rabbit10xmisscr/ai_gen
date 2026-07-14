@@ -1,0 +1,5 @@
+2026-06-25 13:04:36 [INFO]: Start Test Setup: Navigate to base URL
+2026-06-25 13:04:42 [INFO]: Typing "notfounduser" into Username Input
+2026-06-25 13:04:42 [INFO]: Typing "password123" into Password Input
+2026-06-25 13:04:42 [INFO]: Clicking on Login Button
+2026-06-25 13:04:42 [INFO]: Verifying Error Message is visible

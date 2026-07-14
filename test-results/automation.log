@@ -1,0 +1,35 @@
+2026-06-24 15:50:11 [INFO]: Start Test Setup: Navigate to base URL
+2026-06-24 15:50:38 [INFO]: Typing "admin" into Username Input
+2026-06-24 15:50:38 [INFO]: Typing "admin_password" into Password Input
+2026-06-24 15:50:38 [INFO]: Clicking on Login Button
+2026-06-24 15:50:39 [INFO]: Verified login successfully
+2026-06-24 17:41:55 [INFO]: Start Test Setup: Navigate to base URL
+2026-06-24 17:42:16 [INFO]: Typing "admin" into Username Input
+2026-06-24 17:42:16 [INFO]: Typing "admin_password" into Password Input
+2026-06-24 17:42:16 [INFO]: Clicking on Login Button
+2026-06-24 17:42:16 [INFO]: Verified login successfully
+2026-06-25 13:01:07 [INFO]: Start Test Setup: Navigate to base URL
+2026-06-25 13:01:16 [INFO]: Typing "admin" into Username Input
+2026-06-25 13:01:16 [INFO]: Typing "wrongpassword123" into Password Input
+2026-06-25 13:01:16 [INFO]: Clicking on Login Button
+2026-06-25 13:01:16 [INFO]: Verifying Error Message is visible
+2026-06-25 13:04:07 [INFO]: Start Test Setup: Navigate to base URL
+2026-06-25 13:04:12 [INFO]: Typing "admin" into Username Input
+2026-06-25 13:04:12 [INFO]: Typing "admin_password" into Password Input
+2026-06-25 13:04:12 [INFO]: Clicking on Login Button
+2026-06-25 13:04:12 [INFO]: Verified login successfully
+2026-06-25 13:04:23 [INFO]: Start Test Setup: Navigate to base URL
+2026-06-25 13:04:28 [INFO]: Typing "admin" into Username Input
+2026-06-25 13:04:28 [INFO]: Typing "wrongpassword123" into Password Input
+2026-06-25 13:04:28 [INFO]: Clicking on Login Button
+2026-06-25 13:04:29 [INFO]: Verifying Error Message is visible
+2026-06-25 13:04:36 [INFO]: Start Test Setup: Navigate to base URL
+2026-06-25 13:04:42 [INFO]: Typing "notfounduser" into Username Input
+2026-06-25 13:04:42 [INFO]: Typing "password123" into Password Input
+2026-06-25 13:04:42 [INFO]: Clicking on Login Button
+2026-06-25 13:04:42 [INFO]: Verifying Error Message is visible
+2026-06-29 12:40:30 [INFO]: Start Test Setup: Navigate to base URL
+2026-06-29 12:40:48 [INFO]: Typing "admin" into Username Input
+2026-06-29 12:40:48 [INFO]: Typing "admin_password" into Password Input
+2026-06-29 12:40:48 [INFO]: Clicking on Login Button
+2026-06-29 12:40:48 [INFO]: Verified login successfully

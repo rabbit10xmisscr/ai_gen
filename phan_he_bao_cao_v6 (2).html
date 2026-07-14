@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eForm - Thông tin về Chương trình, kế hoạch phát triển nhà ở</title>
+<style>
+  :root{
+    --navy:#15428a;
+    --navy-d:#0e3a82;
+    --blue:#1565d8;
+    --blue-soft:#e8f0fe;
+    --line:#e3e8ef;
+    --line2:#eef2f7;
+    --bg:#eef2f7;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --green:#15803d;
+    --green-soft:#e7f6ec;
+    --amber:#b45309;
+    --amber-soft:#fef3e2;
+    --sidebar:#ffffff;
+    --radius:10px;
+    --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.04);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:"Segoe UI",Roboto,system-ui,-apple-system,Arial,sans-serif;
+    font-size:14px;line-height:1.5;
+  }
+
+  /* ---------- Top header ---------- */
+  header.portal{
+    background:linear-gradient(90deg,var(--navy-d),var(--navy));
+    color:#fff;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;
+  }
+  .portal .brand{display:flex;align-items:center;gap:12px;}
+  .portal .emblem{width:40px;height:40px;border-radius:50%;background:#f7c948;display:flex;align-items:center;justify-content:center;font-size:21px;flex:0 0 auto;}
+  .portal .brand .t1{font-size:14px;font-weight:800;letter-spacing:.4px;line-height:1.1;}
+  .portal .brand .t2{font-size:11px;opacity:.85;text-transform:uppercase;letter-spacing:.3px;}
+  .portal .tools{display:flex;align-items:center;gap:16px;font-size:17px;}
+  .portal .tools .av{width:30px;height:30px;border-radius:50%;background:#3f74c4;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;}
+
+  /* ---------- Nav bar ---------- */
+  nav.menu{background:#fff;border-bottom:1px solid var(--line);height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;}
+  nav.menu .links{display:flex;align-items:center;gap:4px;height:100%;}
+  nav.menu .links a{display:inline-flex;align-items:center;height:100%;padding:0 14px;font-size:13px;color:#374151;text-decoration:none;border-bottom:2px solid transparent;}
+  nav.menu .links a.active{color:var(--blue);font-weight:700;border-bottom-color:var(--blue);}
+  nav.menu .links a:hover{color:var(--blue);}
+  nav.menu .links a .home{font-size:15px;}
+  nav.menu .unit{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);}
+  nav.menu .unit select{border:1px solid var(--line);border-radius:7px;padding:5px 26px 5px 10px;font-size:12.5px;font-family:inherit;}
+
+  /* ---------- Shell layout ---------- */
+  .shell{display:flex;align-items:flex-start;min-height:calc(100vh - 100px);}
+  aside{width:236px;flex:0 0 auto;background:var(--sidebar);border-right:1px solid var(--line);min-height:calc(100vh - 100px);padding:14px 0;}
+  aside .sec{font-size:10.5px;letter-spacing:.6px;color:#9aa3b2;text-transform:uppercase;padding:6px 18px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;}
+  aside .sec .collapse{cursor:pointer;}
+  aside a.item{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:13px;color:#374151;text-decoration:none;border-left:3px solid transparent;}
+  aside a.item:hover{background:#f5f8fc;}
+  aside a.item.active{background:var(--blue-soft);color:var(--blue);font-weight:700;border-left-color:var(--blue);}
+  aside a.item .ic{width:18px;text-align:center;flex:0 0 auto;}
+
+  main{flex:1;min-width:0;padding:18px 22px 80px;}
+  aside .nav-group{display:flex;flex-direction:column;}
+  aside .nav-group .item .caret{margin-left:auto;font-size:11px;color:var(--muted);transition:transform .2s;}
+  aside .nav-group.collapsed .submenu{display:none;}
+  aside .nav-group.collapsed .item .caret{transform:rotate(-90deg);}
+  aside .submenu{display:flex;flex-direction:column;background:#fbfcfe;border-bottom:1px solid var(--line2);padding:2px 0 4px;}
+  aside a.subitem{display:block;padding:7px 16px 7px 42px;font-size:12px;color:#4b5563;text-decoration:none;border-left:3px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  aside a.subitem:hover{background:#eef3fb;}
+  aside a.subitem.active{background:var(--blue-soft);color:var(--blue);font-weight:700;border-left-color:var(--blue);}
+
+  /* ---------- Setup panel ---------- */
+  .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;}
+  .panel .ptitle{display:flex;align-items:center;gap:9px;padding:13px 18px;border-bottom:1px solid var(--line2);font-weight:700;color:var(--navy);font-size:14px;cursor:pointer;user-select:none;}
+  .panel .ptitle .tri{color:var(--muted);font-size:11px;transition:transform .2s;}
+  .panel.collapsed .tri{transform:rotate(-90deg);}
+  .panel .pbody{padding:16px 18px;}
+  .panel.collapsed .pbody{display:none;}
+
+  /* ---------- Report header ---------- */
+  .rpt-head{margin:4px 2px 16px;}
+  .rpt-head h2{margin:0 0 4px;font-size:18px;color:var(--navy);}
+  .rpt-head .meta{font-size:13px;color:var(--muted);}
+  .rpt-head .meta b{color:var(--amber);}
+  .progress{margin-top:10px;background:#fff;border:1px solid var(--line);border-radius:20px;height:8px;overflow:hidden;max-width:100%;}
+  .progress>span{display:block;height:100%;background:var(--blue);width:0;transition:width .3s;}
+  .progress-label{font-size:12px;color:var(--muted);margin-top:5px;text-align:right;}
+
+  /* ---------- Cards / groups ---------- */
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;}
+  .card>.head{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;}
+  .card>.head .num{width:26px;height:26px;border-radius:7px;background:var(--blue-soft);color:var(--blue);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .card>.head h3{margin:0;font-size:15px;color:var(--navy);flex:1;font-weight:700;}
+  .chev{width:22px;height:22px;flex:0 0 auto;color:var(--muted);transition:transform .2s;}
+  .card.collapsed .chev{transform:rotate(-90deg);}
+  .card .body{padding:4px 18px 20px;border-top:1px solid var(--line2);}
+  .card.collapsed .body{display:none;}
+
+  /* ---------- Form fields ---------- */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 18px;align-items:end;}
+  .grid.three{grid-template-columns:repeat(3,1fr);}
+  .field.full{grid-column:1 / -1;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field label{font-size:12.5px;font-weight:600;color:#374151;min-height:32px;}
+  .t3info .field{flex-direction:row;align-items:center;gap:12px;}
+  .t3info .field>label{flex:0 0 215px;min-height:auto;}
+  .t3info .field>label .req{}
+  .t3info .field>input,.t3info .field>select{flex:1;min-width:0;}
+  .tagbox{position:relative;border:1px solid var(--line);border-radius:8px;padding:5px 8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:38px;background:#fff;cursor:text;}
+  .tagbox:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,101,216,.12);}
+  .tagbox .tag{display:inline-flex;align-items:center;gap:6px;background:var(--blue-soft);color:var(--blue);border-radius:6px;padding:3px 8px;font-size:12.5px;font-weight:600;}
+  .tagbox .tag b{cursor:pointer;font-weight:700;}
+  .tagbox input.taginput{border:none;outline:none;flex:1;min-width:130px;font-size:13.5px;font-family:inherit;padding:4px 2px;background:transparent;}
+  .suggest{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);z-index:40;display:none;max-height:240px;overflow:auto;}
+  .suggest.open{display:block;}
+  .suggest .opt{padding:9px 12px;font-size:13px;cursor:pointer;}
+  .suggest .opt:hover{background:var(--blue-soft);}
+  .suggest .sfoot{display:flex;border-top:1px solid var(--line2);position:sticky;bottom:0;background:#fff;}
+  .suggest .sfoot span{flex:1;text-align:center;padding:9px;font-size:13px;font-weight:600;cursor:pointer;color:var(--blue);}
+  .suggest .sfoot span.clr{color:var(--muted);border-left:1px solid var(--line2);}
+  .suggest .sfoot span:hover{background:#f5f8fc;}
+  .field label .req{color:#dc2626;}
+  .req{color:#dc2626!important;}
+  .field input,.field select,.field textarea{
+    border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:13.5px;font-family:inherit;
+    background:#fff;color:var(--text);transition:.15s;width:100%;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,101,216,.12);}
+  .field input[readonly]{background:#f3f5f9;color:#4b5563;}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 11px center;padding-right:32px;cursor:pointer;}
+  .hint{font-size:11.5px;color:var(--muted);}
+
+  /* ---------- Tables ---------- */
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin-top:6px;}
+  table.eform{width:100%;border-collapse:collapse;font-size:13px;min-width:640px;}
+  table.eform th,table.eform td{border-bottom:1px solid var(--line2);padding:9px 11px;text-align:left;vertical-align:middle;}
+  table.eform thead th{background:#f3f6fb;color:var(--navy);font-weight:700;font-size:12.5px;border-bottom:1px solid var(--line);}
+  table.eform thead th.center,table.eform td.center{text-align:center;}
+  table.eform tbody tr:hover{background:#fafbfd;}
+  table.eform td .tt{display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center;background:#eef2f7;border-radius:6px;font-weight:700;color:#475569;font-size:12px;}
+  table.eform tr.total{background:#f4f8ff;font-weight:700;}
+  table.eform tr.total td{color:var(--navy);}
+  table.eform input.cell{border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;min-width:90px;font-size:13px;}
+  table.eform input.cell:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(21,101,216,.14);}
+  table.eform input.cell[readonly]{background:#eef3fb;font-weight:700;color:var(--navy);}
+  table.eform .unit{font-size:12px;color:var(--muted);}
+  table.eform select.cell{border:1px solid var(--line);border-radius:6px;padding:6px 26px 6px 8px;width:100%;min-width:120px;font-size:12.5px;}
+  .colspan-group{background:#eef4ff!important;color:var(--blue)!important;text-align:center;font-size:11.5px;border-left:1px solid #dbe6f8;}
+
+  /* ---------- Attachments ---------- */
+  .attach-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px dashed var(--line);border-radius:10px;margin-top:10px;flex-wrap:wrap;}
+  .attach-row .nm{flex:1;min-width:200px;font-size:13px;}
+  .attach-row .file-btn{font-size:12.5px;color:var(--blue);border:1px solid var(--blue);background:var(--blue-soft);padding:6px 12px;border-radius:7px;cursor:pointer;font-weight:600;}
+  .pdf-tag{font-size:11px;background:#fdeaea;color:#c0392b;padding:2px 8px;border-radius:5px;font-weight:600;}
+
+  /* ---------- Buttons / footer ---------- */
+  .btn{border:1px solid var(--line);background:#fff;color:var(--text);padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.15s;}
+  .btn:hover{background:#f7f9fc;border-color:#cdd6e2;}
+  .btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .btn.primary:hover{background:#0f55bd;}
+  .btn.ghost{background:transparent;}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+
+  /* ---------- Tabs ---------- */
+  .tabbar{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;flex-wrap:wrap;}
+  .tabbar button{border:none;background:none;padding:11px 18px;font-size:13.5px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;}
+  .tabbar button.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tabbar button:hover{color:var(--blue);}
+  /* sub-tabs trong một nhóm */
+  .subtabbar{display:flex;gap:4px;border:1px solid var(--line);background:#f6f9fd;border-radius:10px;padding:4px;margin-bottom:16px;flex-wrap:nowrap;overflow-x:auto;}
+  .subtabbar button{border:none;background:none;padding:9px 13px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:7px;font-family:inherit;white-space:nowrap;}
+  .subtabbar button.active{background:#fff;color:var(--blue);box-shadow:var(--shadow);}
+  /* dải tiêu đề mục trong form */
+  .fsec{grid-column:1/-1;font-size:12.5px;font-weight:700;color:var(--blue);background:var(--blue-soft);padding:8px 12px;border-radius:7px;margin-top:8px;border-left:3px solid var(--blue);}
+
+  /* ---------- Census area blocks (Tab 2) ---------- */
+  .area{border:1px solid var(--line);border-radius:10px;margin-top:12px;overflow:hidden;background:#fff;}
+  .area>.ahead{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f6f9fd;cursor:pointer;user-select:none;}
+  .area>.ahead .chev{width:18px;height:18px;transition:transform .2s;color:var(--muted);}
+  .area>.ahead strong{font-size:14px;color:var(--navy);flex:1;}
+  .area>.ahead .tag{font-size:11px;color:var(--muted);background:#fff;border:1px solid var(--line);padding:2px 9px;border-radius:14px;}
+  .area.collapsed .chev{transform:rotate(-90deg);}
+  .area .acontent{padding:4px 14px 14px;}
+  .area.collapsed .acontent{display:none;}
+  .subarea{border-top:1px dashed var(--line);padding-top:13px;margin-top:13px;}
+  .subarea:first-child{border-top:none;margin-top:6px;}
+  .subarea-title{font-size:13px;font-weight:700;color:#374151;margin-bottom:9px;display:flex;align-items:center;gap:8px;}
+  .subarea-title .pill{font-size:11px;font-weight:700;background:var(--blue-soft);color:var(--blue);padding:2px 10px;border-radius:12px;}
+  .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;}
+  .metric-col{border:1px solid var(--line2);border-radius:8px;padding:11px 12px;background:#fcfdff;}
+  .metric-col .mc-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:9px;}
+  .metric-col .field+.field{margin-top:9px;}
+  @media(max-width:720px){.metric-grid{grid-template-columns:1fr;}}
+
+  .footbar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:13px 22px;display:flex;justify-content:flex-end;gap:10px;box-shadow:0 -2px 8px rgba(16,24,40,.05);margin:0 -22px -80px;}
+  .footbar .left{margin-right:auto;color:var(--muted);font-size:12.5px;align-self:center;}
+
+  .toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:11px 20px;border-radius:10px;font-size:13.5px;opacity:0;pointer-events:none;transition:.25s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.2);}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media(max-width:900px){aside{display:none;}.grid,.grid.three{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ===== Top header ===== -->
+<header class="portal">
+  <div class="brand">
+    <div class="emblem">★</div>
+    <div>
+      <div class="t1">CỔNG THÔNG TIN BẤT ĐỘNG SẢN</div>
+      <div class="t2">Hệ thống thông tin về nhà ở và thị trường bất động sản</div>
+    </div>
+  </div>
+  <div class="tools">
+    <span title="Cài đặt">⚙️</span>
+    <span title="Thông báo">🔔</span>
+    <span class="av">Q</span>
+  </div>
+</header>
+
+<!-- ===== Nav bar ===== -->
+<nav class="menu">
+  <div class="links">
+    <a href="#" class="home active">🏠 Báo cáo thống kê &amp; phân tích</a>
+    <a href="#">Liên thông thủ tục hành chính</a>
+    <a href="#">Quản lý dữ liệu bất động sản</a>
+  </div>
+  <div class="unit">
+    Đơn vị hiện tại:
+    <select><option selected>Bộ Xây dựng</option><option>Sở Xây dựng tỉnh Quảng Ninh</option></select>
+  </div>
+</nav>
+
+<div class="shell">
+  <!-- ===== Sidebar ===== -->
+  <aside>
+    <div class="sec">Điều hướng nội dung</div>
+    <a href="#" class="item"><span class="ic">📊</span> Theo dõi dự án và giao dịch</a>
+    <div class="sec">Báo cáo</div>
+    <div class="nav-group" id="navKhaibao">
+      <a href="#" class="item active" onclick="toggleSubmenu(event)"><span class="ic">📝</span> Khai báo phát sinh <span class="caret">▾</span></a>
+      <div class="submenu">
+        <a href="#" class="subitem" data-rep="1" title="Nhóm dữ liệu 1 - Thông tin về Chương trình, kế hoạch phát triển nhà ở" onclick="showTab(1);return false;">Nhóm dữ liệu 1 - Thông tin về Chương trình, kế hoạch phát triển nhà ở</a>
+        <a href="#" class="subitem" data-rep="2" title="Nhóm dữ liệu 2 - Thông tin, dữ liệu về nhà ở trong tổng điều tra dân số và nhà ở; điều tra dân số và nhà ở giữa kỳ" onclick="showTab(2);return false;">Nhóm dữ liệu 2 - Thông tin, dữ liệu về nhà ở trong tổng điều tra dân số và nhà ở; điều tra dân số và nhà ở giữa kỳ</a>
+        <a href="#" class="subitem" data-rep="3" title="Nhóm dữ liệu 3 - Thông tin, dữ liệu về dự án nhà ở" onclick="showTab(3);return false;">Nhóm dữ liệu 3 - Thông tin, dữ liệu về dự án nhà ở</a>
+        <a href="#" class="subitem" data-rep="4" title="Nhóm dữ liệu 4 - Thông tin, dữ liệu về nhà ở công vụ hiện có và đang sử dụng" onclick="showTab(4);return false;">Nhóm dữ liệu 4 - Thông tin, dữ liệu về nhà ở công vụ hiện có và đang sử dụng</a>
+        <a href="#" class="subitem" data-rep="5" title="Nhóm dữ liệu 5 - Thông tin, dữ liệu về các chương trình hỗ trợ về nhà ở" onclick="showTab(5);return false;">Nhóm dữ liệu 5 - Thông tin, dữ liệu về các chương trình hỗ trợ về nhà ở</a>
+        <a href="#" class="subitem" data-rep="7" title="Nhóm dữ liệu 7 - Thông tin về sở hữu nhà ở của tổ chức, cá nhân" onclick="showTab(7);return false;">Nhóm dữ liệu 7 - Thông tin về sở hữu nhà ở của tổ chức, cá nhân</a>
+        <a href="#" class="subitem" data-rep="8" title="Nhóm dữ liệu 8 - Thông tin về cá nhân đã được mua, thuê, thuê mua nhà ở xã hội" onclick="showTab(8);return false;">Nhóm dữ liệu 8 - Thông tin về cá nhân đã được mua, thuê, thuê mua nhà ở xã hội</a>
+        <a href="#" class="subitem" data-rep="9" title="Nhóm dữ liệu 9 - Thông tin về tổ chức, doanh nghiệp &amp; giao dịch bất động sản" onclick="showTab(9);return false;">Nhóm dữ liệu 9 - Thông tin về tổ chức, doanh nghiệp &amp; giao dịch bất động sản</a>
+        <a href="#" class="subitem" data-rep="10" title="Nhóm dữ liệu 10 - Cá nhân được cấp chứng chỉ hành nghề môi giới BĐS" onclick="showTab(10);return false;">Nhóm dữ liệu 10 - Cá nhân được cấp chứng chỉ hành nghề môi giới BĐS</a>
+        <a href="#" class="subitem" data-rep="11" title="Nhóm dữ liệu 11 - Cơ sở đào tạo, bồi dưỡng kiến thức hành nghề môi giới BĐS" onclick="showTab(11);return false;">Nhóm dữ liệu 11 - Cơ sở đào tạo, bồi dưỡng kiến thức hành nghề môi giới BĐS</a>
+        <a href="#" class="subitem" data-rep="12" title="Nhóm dữ liệu 12 - Đơn vị quản lý vận hành nhà chung cư" onclick="showTab(12);return false;">Nhóm dữ liệu 12 - Đơn vị quản lý vận hành nhà chung cư</a>
+        <a href="#" class="subitem" data-rep="15" title="Nhóm dữ liệu 15 - Thuế đối với hoạt động chuyển nhượng bất động sản" onclick="showTab(15);return false;">Nhóm dữ liệu 15 - Thuế đối với hoạt động chuyển nhượng bất động sản</a>
+        <a href="#" class="subitem" data-rep="16" title="Nhóm dữ liệu 16 - Hoạt động đầu tư có vốn nước ngoài" onclick="showTab(16);return false;">Nhóm dữ liệu 16 - Hoạt động đầu tư có vốn nước ngoài</a>
+        <a href="#" class="subitem" data-rep="17" title="Nhóm dữ liệu 17 - Phát hành trái phiếu doanh nghiệp lĩnh vực BĐS" onclick="showTab(17);return false;">Nhóm dữ liệu 17 - Phát hành trái phiếu doanh nghiệp lĩnh vực BĐS</a>
+        <a href="#" class="subitem" data-rep="18" title="Nhóm dữ liệu 18 - Tín dụng trong lĩnh vực BĐS; thế chấp, giải chấp" onclick="showTab(18);return false;">Nhóm dữ liệu 18 - Tín dụng trong lĩnh vực BĐS; thế chấp, giải chấp</a>
+        <a href="#" class="subitem" data-rep="19" title="Nhóm dữ liệu 19 - Giao dịch BĐS qua hoạt động công chứng, chứng thực" onclick="showTab(19);return false;">Nhóm dữ liệu 19 - Giao dịch BĐS qua hoạt động công chứng, chứng thực</a>
+      </div>
+    </div>
+    <a href="#" class="item"><span class="ic">🗂️</span> Báo cáo lưu nháp</a>
+    <a href="#" class="item"><span class="ic">📥</span> Yêu cầu từ đơn vị trên</a>
+    <a href="#" class="item"><span class="ic">🔁</span> Theo dõi luồng dữ liệu</a>
+    <a href="#" class="item"><span class="ic">⬆️</span> Đã đồng bộ lên đơn vị trên</a>
+  </aside>
+
+  <!-- ===== Main ===== -->
+  <main>
+
+    <!-- Cụm nút Excel cố định (hiện trên mọi nhóm) -->
+    <div class="toolbar" style="margin-bottom:16px;flex-wrap:nowrap">
+      <button class="btn" onclick="importExcel()" style="flex:0 0 auto;white-space:nowrap">⬆ Nhập liệu từ Excel</button>
+      <button class="btn" onclick="downloadExcel()" style="flex:0 0 auto;white-space:nowrap">⬇ Tải xuống Excel</button>
+      <div class="hint" style="flex:1 1 auto;min-width:0;margin:0;padding:8px 14px;background:var(--blue-soft);border:1px solid #cdddfb;border-radius:8px;color:#1e40af;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+        <b>Hướng dẫn nhập liệu:</b> Bạn có thể nhập theo 1 trong 2 cách — (1) <b>Tải lên file Excel</b>, hoặc (2) <b>Nhập trực tiếp</b> vào biểu mẫu bên dưới.
+      </div>
+    </div>
+
+    <!-- ===================== PANE 1 ===================== -->
+    <div class="tabpane" id="pane1">
+
+
+
+    <!-- ===== Biểu 1 ===== -->
+    <div class="card" id="c1">
+      <div class="head" onclick="toggleCard('c1')">
+        <h3>1. Diện tích nhà ở bình quân đầu người</h3>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="body">
+        <div class="tbl-wrap">
+          <table class="eform">
+            <thead>
+              <tr>
+                <th class="center" style="width:46px">TT</th>
+                <th>Diện tích nhà ở bình quân đầu người</th>
+                <th style="width:150px">Đơn vị</th>
+                <th class="center" style="width:175px">Chương trình phát triển nhà ở 2021–2030</th>
+                <th class="center" style="width:175px">Kế hoạch phát triển nhà ở 2026–2030</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="center"><span class="tt">I</span></td>
+                <td>Toàn Tỉnh / Thành phố</td>
+                <td><select class="cell"><option selected>m² sàn/người</option><option>m² sàn</option></select></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td>
+              </tr>
+              <tr>
+                <td class="center"><span class="tt">1</span></td>
+                <td style="padding-left:26px">Đô thị</td>
+                <td><select class="cell"><option selected>m² sàn/người</option><option>m² sàn</option></select></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td>
+              </tr>
+              <tr>
+                <td class="center"><span class="tt">2</span></td>
+                <td style="padding-left:26px">Nông thôn</td>
+                <td><select class="cell"><option selected>m² sàn/người</option><option>m² sàn</option></select></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Biểu 2 ===== -->
+    <div class="card" id="c2">
+      <div class="head" onclick="toggleCard('c2')">
+        <h3>2. Dự kiến diện tích đất để phát triển nhà ở xã hội, nhà ở phục vụ tái định cư, nhà ở công vụ, cải tạo, xây dựng lại nhà chung cư</h3>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="body">
+        <div class="tbl-wrap">
+          <table class="eform">
+            <thead>
+              <tr>
+                <th class="center" style="width:46px">TT</th>
+                <th>Loại hình</th>
+                <th style="width:120px">Đơn vị</th>
+                <th class="center" style="width:210px">Chương trình phát triển nhà ở 2021–2030</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="center"><span class="tt">1</span></td><td>Nhà ở xã hội</td>
+                <td><select class="cell"><option selected>ha</option><option>m²</option></select></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td></tr>
+              <tr><td class="center"><span class="tt">2</span></td><td>Nhà ở phục vụ tái định cư</td>
+                <td><select class="cell"><option selected>ha</option><option>m²</option></select></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td></tr>
+              <tr><td class="center"><span class="tt">3</span></td><td>Nhà ở công vụ</td>
+                <td><select class="cell"><option selected>ha</option><option>m²</option></select></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td></tr>
+              <tr><td class="center"><span class="tt">4</span></td><td>Cải tạo, xây dựng lại nhà chung cư</td>
+                <td><select class="cell"><option selected>ha</option><option>m²</option></select></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td></tr>
+              <tr><td class="center"><span class="tt">5</span></td><td>Nhà ở khác (nếu có)</td>
+                <td><select class="cell"><option selected>ha</option><option>m²</option></select></td>
+                <td><input class="cell" type="text" placeholder="Nhập liệu"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Biểu 3 ===== -->
+    <div class="card" id="c3">
+      <div class="head" onclick="toggleCard('c3')">
+        <h3>3. Diện tích sàn xây dựng nhà ở hoàn thành, đưa vào sử dụng</h3>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="body">
+        <div class="tbl-wrap">
+          <table class="eform" id="tbl3">
+            <thead>
+              <tr>
+                <th class="center" rowspan="2" style="width:46px">TT</th>
+                <th rowspan="2">Mục tiêu, chỉ tiêu thực hiện</th>
+                <th class="colspan-group" colspan="2">Chương trình phát triển nhà ở 2021–2030</th>
+                <th class="colspan-group" colspan="2">Kế hoạch phát triển nhà ở 2026–2030</th>
+                <th class="colspan-group" colspan="2">Kết quả thực hiện kế hoạch 2026–2030</th>
+              </tr>
+              <tr>
+                <th class="center">Số lượng</th><th class="center">Diện tích<span class="req">*</span></th>
+                <th class="center">Số lượng</th><th class="center">Diện tích<span class="req">*</span></th>
+                <th class="center">Số lượng</th><th class="center">Diện tích<span class="req">*</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="total">
+                <td class="center">–</td>
+                <td>Tổng diện tích sàn nhà ở tăng thêm</td>
+                <td><input class="cell" data-col="0" readonly></td>
+                <td><input class="cell" data-col="1" readonly></td>
+                <td><input class="cell" data-col="2" readonly></td>
+                <td><input class="cell" data-col="3" readonly></td>
+                <td><input class="cell" data-col="4" readonly></td>
+                <td><input class="cell" data-col="5" readonly></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hint" style="margin-top:8px">* Đơn vị diện tích: m² sàn. Dòng "Tổng" được hệ thống tự cộng từ các chỉ tiêu con (nếu nhập số).</p>
+      </div>
+    </div>
+
+    <!-- ===== Biểu 4 ===== -->
+    <div class="card" id="c4">
+      <div class="head" onclick="toggleCard('c4')">
+        <h3>4. Hỗ trợ nhà ở theo chương trình mục tiêu Quốc gia về nhà ở</h3>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="body">
+        <div class="tbl-wrap">
+          <table class="eform" id="tbl4">
+            <thead>
+              <tr>
+                <th class="center" style="width:46px">TT</th>
+                <th>Mục tiêu, chỉ tiêu thực hiện</th>
+                <th style="width:90px">Đơn vị</th>
+                <th class="center" style="width:155px">Chương trình phát triển nhà ở 2021–2030</th>
+                <th class="center" style="width:155px">Kế hoạch phát triển nhà ở 2026–2030</th>
+                <th class="center" style="width:160px">Kết quả thực hiện kế hoạch 2026–2030</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="total">
+                <td class="center">–</td><td>Tổng số</td>
+                <td class="center"><span class="unit">Hộ</span></td>
+                <td><input class="cell" data-col="0" readonly></td>
+                <td><input class="cell" data-col="1" readonly></td>
+                <td><input class="cell" data-col="2" readonly></td>
+              </tr>
+              <tr>
+                <td class="center"><span class="tt">1</span></td>
+                <td>Hộ gia đình có công với cách mạng</td>
+                <td class="center"><span class="unit">Hộ</span></td>
+                <td><input class="cell t4" type="text" data-col="0" placeholder="Nhập liệu"></td>
+                <td><input class="cell t4" type="text" data-col="1" placeholder="Nhập liệu"></td>
+                <td><input class="cell t4" type="text" data-col="2" placeholder="Nhập liệu"></td>
+              </tr>
+              <tr>
+                <td class="center"><span class="tt">2</span></td>
+                <td>Hộ nghèo, hộ cận nghèo; Hộ đồng bào DTTS</td>
+                <td class="center"><span class="unit">Hộ</span></td>
+                <td><input class="cell t4" type="text" data-col="0" placeholder="Nhập liệu"></td>
+                <td><input class="cell t4" type="text" data-col="1" placeholder="Nhập liệu"></td>
+                <td><input class="cell t4" type="text" data-col="2" placeholder="Nhập liệu"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Đính kèm ===== -->
+    <div class="card" id="c5">
+      <div class="head" onclick="toggleCard('c5')">
+        <span class="num">📎</span>
+        <h3>5. Tài liệu đính kèm</h3>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="body">
+        <div class="attach-row">
+          <span class="nm">Thông tin về Chương trình phát triển nhà ở được phê duyệt <span class="pdf-tag">.PDF</span></span>
+          <button class="file-btn" onclick="pickFile(this)">⬆ Chọn tệp</button>
+        </div>
+        <div class="attach-row">
+          <span class="nm">Thông tin về Kế hoạch phát triển nhà ở được phê duyệt <span class="pdf-tag">.PDF</span></span>
+          <button class="file-btn" onclick="pickFile(this)">⬆ Chọn tệp</button>
+        </div>
+        <p class="hint" style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)"><b>Ghi chú:</b> Bao gồm cả chương trình, kế hoạch phát triển nhà ở điều chỉnh.</p>
+      </div>
+    </div>
+
+    </div><!-- /pane1 -->
+
+    <!-- ===================== PANE 2 ===================== -->
+    <div class="tabpane" id="pane2" style="display:none">
+
+      <div class="card">
+        <div class="head" style="cursor:default"><h3>Nhà ở trong tổng điều tra dân số và nhà ở <span style="font-weight:400;font-size:12px;color:var(--muted)">(Đơn vị tính: căn)</span></h3></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="field"><label>Tỉnh / Thành phố <span class="req">*</span></label>
+              <select id="n2_prov"><option value="">-- Chọn tỉnh/thành --</option></select>
+            </div>
+            <div class="field"><label>Khu vực <span class="req">*</span></label>
+              <select id="n2_kv"><option value="">-- Chọn --</option><option>Toàn địa bàn</option><option>Đô thị</option><option>Nông thôn</option></select>
+            </div>
+            <div class="fsec">Mức độ kiên cố</div>
+            <div class="field"><label>Nhà ở kiên cố và bán kiên cố (căn) <span class="req">*</span></label><input id="n2_kc" type="text" placeholder="Nhập số căn"></div>
+            <div class="field"><label>Nhà ở thiếu kiên cố và đơn sơ (căn) <span class="req">*</span></label><input id="n2_tkc" type="text" placeholder="Nhập số căn"></div>
+            <div class="fsec">Loại nhà ở</div>
+            <div class="field"><label>Nhà ở chung cư (căn) <span class="req">*</span></label><input id="n2_cc" type="text" placeholder="Nhập số căn"></div>
+            <div class="field"><label>Nhà ở riêng lẻ (căn) <span class="req">*</span></label><input id="n2_rl" type="text" placeholder="Nhập số căn"></div>
+          </div>
+          <div style="margin-top:15px"><button class="btn primary" onclick="n2Add()">+ Cập nhật vào bảng</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — nhà ở trong tổng điều tra dân số &amp; nhà ở</h3></div>
+        <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:1200px">
+          <thead><tr>
+            <th class="center" style="width:44px">STT</th><th style="width:200px">Tỉnh/Thành phố</th><th style="width:140px">Khu vực</th>
+            <th class="center">Nhà ở kiên cố &amp; bán kiên cố (căn)</th><th class="center">Nhà ở thiếu kiên cố &amp; đơn sơ (căn)</th>
+            <th class="center">Nhà ở chung cư (căn)</th><th class="center">Nhà ở riêng lẻ (căn)</th>
+            <th class="center" style="width:90px">Thao tác</th>
+          </tr></thead>
+          <tbody id="p2_body"><tr class="p2-empty"><td colspan="8" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — chọn tỉnh/thành, khu vực, nhập số rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+        </table></div></div>
+      </div>
+
+    </div><!-- /pane2 -->
+
+    <!-- ===================== PANE 3 ===================== -->
+    <div class="tabpane" id="pane3" style="display:none">
+      <datalist id="projDL"></datalist>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="ptitle" style="cursor:default"><span style="color:var(--blue)">●</span> Dự án báo cáo</div>
+        <div class="pbody"><div class="grid two t3info">
+          <div class="field"><label>Mã số dự án <span class="req">*</span></label><input id="p3proj_ma" list="projDL" type="text" placeholder="Nhập / chọn mã số dự án" oninput="projFill('p3proj')"></div>
+          <div class="field"><label>Tên dự án</label><input id="p3proj_ten" type="text" placeholder="Tự điền theo mã số dự án" readonly></div>
+        </div></div>
+      </div>
+      <div class="subtabbar">
+        <button id="t3_1" class="active" onclick="showT3(1)">1. Thông tin chung</button>
+        <button id="t3_2" onclick="showT3(2)">2. Hồ sơ pháp lý dự án</button>
+        <button id="t3_3" onclick="showT3(3)">3. Tiến độ triển khai</button>
+        <button id="t3_4" onclick="showT3(4)">4. BĐS đủ điều kiện kinh doanh</button>
+        <button id="t3_5" onclick="showT3(5)">5. Chuyển nhượng</button>
+        <button id="t3_6" onclick="showT3(6)">6. Thông tin giao dịch</button>
+      </div>
+
+      <!-- Tab 1 -->
+      <div id="t3p1">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Thông tin chung dự án</h3></div>
+          <div class="body"><div class="grid two t3info">
+            <div class="field"><label>Tên chủ đầu tư <span class="req">*</span></label><input type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Số định danh tổ chức</label><input type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Tổng mức đầu tư (tỷ đồng)</label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Trong đó: Vốn chủ sở hữu (tỷ đồng)</label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Trong đó: Vốn được huy động (tỷ đồng)</label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Quy mô sử dụng đất (Ha)</label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Thời hạn hoạt động (năm)</label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tiến độ dự án được duyệt từ</label><input type="text" placeholder="Chọn thời điểm" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></div>
+            <div class="field"><label>Tiến độ dự án được duyệt đến</label><input type="text" placeholder="Chọn thời điểm" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></div>
+          </div></div>
+        </div>
+        <div style="margin:18px 2px 10px">
+          <h3 style="margin:0;font-size:15px;color:var(--navy)">Thông tin quy mô</h3>
+          <p class="hint" style="margin:6px 0 0">Mỗi loại hình bất động sản là một nhóm (panel) xổ ra/thu vào.</p>
+        </div>
+        <div id="t3_quymo"></div>
+      </div>
+
+      <!-- Tab 2 -->
+      <div id="t3p2" style="display:none">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Hồ sơ pháp lý dự án</h3></div>
+          <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:1100px">
+            <thead><tr><th class="center" style="width:50px">Mục</th><th>Tên hồ sơ / Tài liệu pháp lý</th><th style="width:200px">Số hiệu văn bản</th><th style="width:180px">Ngày cấp</th><th class="center" style="width:140px">Đính kèm (PDF)</th></tr></thead>
+            <tbody><tr style="background:#f3f6fb;font-weight:700"><td colspan="5">II. Thông tin về dự án bất động sản</td></tr><tr><td class="center"><span class="tt">1</span></td><td>Quyết định chủ trương đầu tư hoặc chấp thuận chủ trương đầu tư hoặc chấp thuận đầu tư dự án bất động sản</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">2</span></td><td>Quyết định giao đất, cho thuê đất, cho phép chuyển mục đích sử dụng đất của cơ quan nhà nước có thẩm quyền</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">3</span></td><td>Quyết định phê duyệt quy hoạch chi tiết 1/500 hoặc quy hoạch tổng mặt bằng của dự án được phê duyệt</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">4</span></td><td>Hợp đồng mẫu được sử dụng để ký kết trong giao dịch kinh doanh bất động sản</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr style="background:#f3f6fb;font-weight:700"><td colspan="5">III. Thông tin về nhà ở, công trình xây dựng hình thành trong tương lai</td></tr><tr><td class="center"><span class="tt">1</span></td><td>Thông báo kết quả thẩm định báo cáo nghiên cứu khả thi đầu tư xây dựng hoặc Thông báo kết quả thẩm định thiết kế cơ sở của cơ quan nhà nước có thẩm quyền</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">2</span></td><td>Giấy phép xây dựng đối với trường hợp phải cấp giấy phép xây dựng</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">3</span></td><td>Thông báo khởi công xây dựng công trình</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">4</span></td><td>Giấy tờ về nghiệm thu đã hoàn thành xây dựng cơ sở hạ tầng kỹ thuật theo quy định của pháp luật về xây dựng tương ứng theo tiến độ dự án</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">5</span></td><td>Giấy tờ chứng minh đã được nghiệm thu hoàn thành xây dựng phần móng theo quy định của pháp luật về xây dựng đối với trường hợp là nhà chung cư, tòa nhà hỗn hợp có nhà ở</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">6</span></td><td><select class="cell" style="text-align:left;width:100%"><option value="">Giấy tờ về quyền sử dụng đất (chọn 1 trong các loại)</option><option>Quyết định giao đất</option><option>Quyết định cho thuê đất và hợp đồng cho thuê sử dụng đất</option><option>Giấy chứng nhận quyền sử dụng đất</option><option>Giấy chứng nhận quyền sở hữu nhà ở và quyền sử dụng đất ở</option><option>Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản gắn liền với đất</option><option>Giấy chứng nhận khác về quyền sử dụng đất, sở hữu tài sản theo quy định</option></select></td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">7</span></td><td>Văn bản cam kết phát hành bảo lãnh quy định tại khoản 2 Điều 26 Luật Kinh doanh bất động sản của ngân hàng thương mại</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">8</span></td><td>Văn bản của cơ quan nhà nước có thẩm quyền về nhà ở hình thành trong tương lai đủ điều kiện được bán, cho thuê mua</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">9</span></td><td>Các hạn chế về quyền sở hữu, quyền sử dụng bất động sản (nếu có)</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">10</span></td><td>Việc thế chấp nhà ở, công trình xây dựng, phần diện tích sàn xây dựng... đưa vào kinh doanh</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">11</span></td><td>Thông tin về phần diện tích sử dụng chung đối với bất động sản là nhà chung cư, công trình xây dựng hỗn hợp</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr style="background:#f3f6fb;font-weight:700"><td colspan="5">IV. Thông tin về nhà ở, công trình xây dựng có sẵn</td></tr><tr><td class="center"><span class="tt">1</span></td><td><select class="cell" style="text-align:left;width:100%"><option value="">Giấy chứng nhận (chọn 1 trong các loại)</option><option>Giấy chứng nhận quyền sở hữu nhà ở và quyền sử dụng đất ở</option><option>Giấy chứng nhận quyền sử dụng đất, quyền sở hữu nhà ở và tài sản gắn liền với đất</option><option>Giấy chứng nhận khác về quyền sử dụng đất, quyền sở hữu tài sản gắn liền với đất</option><option>Giấy chứng nhận quyền sở hữu nhà ở</option><option>Giấy chứng nhận quyền sở hữu công trình xây dựng</option></select></td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">2</span></td><td><select class="cell" style="text-align:left;width:100%"><option value="">Các thông tin khác (chọn 1 trong các loại)</option><option>Các hạn chế về quyền sở hữu, quyền sử dụng bất động sản (nếu có)</option><option>Việc thế chấp nhà ở, công trình xây dựng... đưa vào kinh doanh</option></select></td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr style="background:#f3f6fb;font-weight:700"><td colspan="5">V. Thông tin về quyền sử dụng đất đã có hạ tầng kỹ thuật trong dự án</td></tr><tr><td class="center"><span class="tt">1</span></td><td>Giấy chứng nhận về quyền sử dụng đất đối với phần diện tích đất đã có hạ tầng kỹ thuật</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">2</span></td><td>Văn bản của cơ quan nhà nước có thẩm quyền về quyền SDĐ đã có hạ tầng kỹ thuật đủ điều kiện chuyển nhượng cho cá nhân tự xây nhà ở</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">3</span></td><td>Giấy tờ về việc hoàn thành đầu tư xây dựng các công trình hạ tầng kỹ thuật theo quy hoạch chi tiết, tiến độ dự án được duyệt</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">4</span></td><td>Giấy tờ về việc chủ đầu tư dự án đã hoàn thành nghĩa vụ tài chính về đất đai (tiền sử dụng đất, tiền thuê đất, thuế, phí, lệ phí...)</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td class="center"><span class="tt">5</span></td><td><select class="cell" style="text-align:left;width:100%"><option value="">Các thông tin khác (chọn 1 trong các loại)</option><option>Các hạn chế về quyền sử dụng đất đã có hạ tầng kỹ thuật trong dự án (nếu có)</option><option>Việc thế chấp quyền sử dụng đất, dự án bất động sản đưa vào kinh doanh</option></select></td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr></tbody>
+          </table></div></div>
+        </div>
+      </div>
+
+            <!-- Tab 3 -->
+      <div id="t3p3" style="display:none">
+        <div style="margin:4px 2px 12px"><p class="hint" style="margin:0">Mỗi dự án khai báo <b>nhiều đợt</b> theo biên bản nghiệm thu. Nhập "Số lượng (đợt này)" rồi bấm <b>"Ghi nhận đợt khai báo"</b> để hệ thống <b>tự cộng dồn vào cột Lũy kế</b> (Lũy kế không nhập tay). <span style="color:var(--muted)">Nghiên cứu liên thông TTHC qua biên bản nghiệm thu.</span></p></div>
+        <div id="t3c_panels"></div>
+        <div style="margin-top:14px"><button class="btn primary" onclick="ghiNhanDot('tdp-sl','tdp-lk')">✓ Ghi nhận đợt khai báo</button></div>
+      </div>
+
+      <!-- Tab 4 -->
+      <div id="t3p4" style="display:none">
+        <div style="margin:4px 2px 12px"><p class="hint" style="margin:0">BĐS đủ điều kiện đưa vào kinh doanh — khai báo nhiều đợt cho cùng dự án; cột <b>Lũy kế</b> tự cộng dồn (không nhập tay).</p></div>
+        <div id="t3d_panels"></div>
+        <div style="margin-top:14px"><button class="btn primary" onclick="ghiNhanDot('ddk-sl','ddk-lk')">✓ Ghi nhận đợt khai báo</button></div>
+      </div>
+
+      <!-- Tab 5 -->
+      <div id="t3p5" style="display:none">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Thông tin chuyển nhượng</h3></div>
+          <div class="body"><div class="grid three">
+            <div class="field"><label>Tên chủ đầu tư nhận chuyển nhượng <span class="req">*</span></label><input type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Số định danh tổ chức nhận chuyển nhượng</label><input type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Địa điểm dự án chuyển nhượng <span class="req">*</span></label><input type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Số quyết định cho phép chuyển nhượng</label><input type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Quy mô của dự án chuyển nhượng</label><input type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Tổng vốn đầu tư (tỷ đồng)</label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Thời hạn hoạt động (năm)</label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tiến độ dự án được duyệt từ</label><input type="text" placeholder="Chọn thời điểm" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></div>
+            <div class="field"><label>Tiến độ dự án được duyệt đến</label><input type="text" placeholder="Chọn thời điểm" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></div>
+          </div></div>
+        </div>
+        <div class="card">
+          <div class="head" style="cursor:default"><span class="num">▦</span><h3>Văn bản pháp lý chuyển nhượng</h3></div>
+          <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:1000px">
+            <thead><tr><th>Loại tài liệu</th><th style="width:220px">Số hiệu văn bản</th><th style="width:180px">Ngày cấp</th><th class="center" style="width:140px">Đính kèm (PDF)</th></tr></thead>
+            <tbody><tr><td>Giấy chứng nhận về quyền sử dụng đất đối với toàn bộ hoặc phần dự án chuyển nhượng</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td>Quyết định của cơ quan có thẩm quyền cho phép chuyển nhượng</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td>Bản vẽ quy hoạch tổng mặt bằng hoặc bản vẽ kiến trúc cảnh quan (nếu có)</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr><tr><td>Giấy phép xây dựng hoặc thông báo khởi công</td><td><input class="cell" type="text" placeholder="Nhập liệu" style="text-align:left"></td><td><input class="cell" type="text" placeholder="Chọn thời điểm" style="text-align:left" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></td><td class="center"><button class="btn" type="button" onclick="t3File(this)" style="padding:5px 10px;white-space:nowrap">⬆ Tải lên PDF</button></td></tr></tbody>
+          </table></div></div>
+        </div>
+      </div>
+
+      <!-- Tab 6 -->
+      <div id="t3p6" style="display:none">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Thông tin hợp đồng giao dịch</h3></div>
+          <div class="body">
+            <div id="g_editnote" style="display:none;background:#fff7e6;border:1px solid #ffd591;color:#b45309;border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:13px;font-weight:600"></div>
+            <div class="grid three">
+              <div class="field"><label>Loại hình BĐS chính <span class="req">*</span></label><select id="g_type" onchange="t3fFillDetail()"><option value="">-- Chọn --</option></select></div>
+              <div class="field"><label>Loại hình nhà ở <span class="req">*</span></label><select id="g_detail"><option value="">-- Chọn loại hình BĐS trước --</option></select></div>
+              <div class="field"><label>Hình thức <span class="req">*</span></label><select id="g_ht"><option value="">-- Chọn --</option><option>Bán</option><option>Cho thuê</option></select></div>
+              <div class="field"><label>Số, ký hiệu hợp đồng</label><input id="g_sohd" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Tên Tổ chức / Cá nhân mua hoặc thuê <span class="req">*</span></label><input id="g_ten" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Số định danh cá nhân / tổ chức mua hoặc thuê</label><input id="g_cccd" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Số lượng (Căn/Lô)</label><input id="g_sl" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Trạng thái hợp đồng <span class="req">*</span></label><select id="g_status"><option value="">-- Chọn --</option><option>Còn hiệu lực</option><option>Hủy hợp đồng</option></select></div>
+              <div class="field"><label>Số giấy chứng nhận <span style="font-weight:400;color:var(--muted)">(nếu đã cấp)</span></label><input id="g_gcn" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>SL đã cấp GCN (lũy kế)</label><input id="g_slgcn" type="text" placeholder="Nhập số"></div>
+            </div>
+
+            <div style="margin:18px 2px 8px"><h3 style="font-size:14px;color:var(--navy);margin:0">Danh sách BĐS trong giao dịch</h3><p class="hint" style="margin:4px 0 0">Mỗi giao dịch có thể gồm nhiều BĐS. Ràng buộc: <b>1 mã BĐS chỉ thuộc 1 hợp đồng còn hiệu lực</b>. Thành tiền = Diện tích × Đơn giá.</p></div>
+            <div class="grid three">
+              <div class="field"><label>Mã BĐS</label><input id="g_bma" list="maddDL" type="text" placeholder="Nhập / chọn mã BĐS đã tồn tại"></div>
+              <div class="field"><label>Diện tích (m²)</label><input id="g_bdt" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Đơn giá/m² (triệu đồng)</label><input id="g_bdg" type="text" placeholder="Nhập số"></div>
+            </div>
+            <datalist id="maddDL"></datalist>
+            <div style="margin-top:10px"><button class="btn" type="button" onclick="bAdd()">+ Thêm BĐS</button></div>
+            <div class="tbl-wrap" style="margin-top:10px"><table class="eform" style="min-width:760px">
+              <thead><tr><th class="center" style="width:44px">STT</th><th>Mã BĐS</th><th class="center">Diện tích (m²)</th><th class="center">Đơn giá/m² (triệu đồng)</th><th class="center">Thành tiền (triệu đồng)</th><th class="center" style="width:70px">Xóa</th></tr></thead>
+              <tbody id="bds_body"><tr class="bds-empty"><td colspan="6" class="center" style="color:var(--muted);padding:14px">Chưa có BĐS — thêm ở trên.</td></tr></tbody>
+              <tfoot><tr class="total"><td colspan="4" style="text-align:right">Tổng thành tiền (triệu đồng)</td><td class="center" id="bds_tong">0</td><td></td></tr></tfoot>
+            </table></div>
+
+            <div style="margin-top:16px"><button id="g_btn" class="btn primary" onclick="t3fAdd()">+ Ghi nhận giao dịch</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="head" style="cursor:default"><span class="num">▦</span><h3 style="flex:1">Danh sách hợp đồng đã ký</h3><span id="tonkho_ind" style="font-size:13px;font-weight:600;color:var(--blue);white-space:nowrap"></span></div>
+          <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:2000px">
+            <thead><tr><th class="center" style="width:44px">STT</th><th>Loại hình BĐS chính</th><th>Loại hình nhà ở</th><th>Hình thức</th><th>Số, ký hiệu hợp đồng</th><th>Mã BĐS</th><th>Tên TC/CN mua hoặc thuê</th><th>Số định danh CN/TC mua hoặc thuê</th><th class="center">Số lượng (Căn/Lô)</th><th class="center">Tổng thành tiền</th><th class="center" style="width:150px">Trạng thái hợp đồng</th><th>Số giấy chứng nhận</th><th class="center">SL đã cấp GCN</th><th class="center" style="width:140px">Thao tác</th></tr></thead>
+            <tbody id="g_body"><tr class="g-empty"><td colspan="14" class="center" style="color:var(--muted);padding:18px">Chưa có hợp đồng — nhập ở trên rồi bấm "Ghi nhận giao dịch".</td></tr></tbody>
+          </table></div></div>
+        </div>
+      </div>
+
+    </div><!-- /pane3 -->
+
+    <!-- ===================== PANE 4 ===================== -->
+    <div class="tabpane" id="pane4" style="display:none">
+
+      <div class="card" id="p4_bt">
+        <div class="head" onclick="toggleCard('p4_bt')"><h3>1. Biệt thự</h3><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="field"><label>Tổng số biệt thự hiện đang quản lý (căn) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng diện tích sử dụng biệt thự hiện đang quản lý (m²) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng số biệt thự đã bố trí cho thuê (căn) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng diện tích sử dụng biệt thự đã bố trí cho thuê (m²) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng số người đang thuê (người) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Giá thuê biệt thự (nghìn đồng/m²) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Ghi chú</label><input type="text" placeholder="Nhập liệu"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="p4_cc">
+        <div class="head" onclick="toggleCard('p4_cc')"><h3>2. Chung cư</h3><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="field"><label>Tổng số chung cư hiện đang quản lý (căn) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng diện tích sử dụng chung cư hiện đang quản lý (m²) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng số chung cư đã bố trí cho thuê (căn) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng diện tích sử dụng chung cư đã bố trí cho thuê (m²) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng số người đang thuê (người) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Giá thuê chung cư (nghìn đồng/m²) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Ghi chú</label><input type="text" placeholder="Nhập liệu"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="p4_nlk">
+        <div class="head" onclick="toggleCard('p4_nlk')"><h3>3. Nhà ở liền kề</h3><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="field"><label>Tổng số nhà ở liền kề hiện đang quản lý (căn) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng diện tích sử dụng nhà ở liền kề hiện đang quản lý (m²) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng số nhà ở liền kề đã bố trí cho thuê (căn) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng diện tích sử dụng nhà ở liền kề đã bố trí cho thuê (m²) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng số người đang thuê (người) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Giá thuê nhà ở liền kề (nghìn đồng/m²) <span class="req">*</span></label><input type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Ghi chú</label><input type="text" placeholder="Nhập liệu"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pane4 -->
+
+    <!-- ===================== PANE 5 ===================== -->
+    <div class="tabpane" id="pane5" style="display:none">
+
+      <!-- Form nhập -->
+      <div class="card">
+        <div class="head" style="cursor:default">
+                    <h3>Thông tin chương trình hỗ trợ về nhà ở</h3>
+        </div>
+        <div class="body">
+          <div class="grid">
+            <div class="field full">
+              <label>Tên chương trình hỗ trợ <span class="req">*</span></label>
+              <select id="p5_prog">
+                <option value="">-- Chọn chương trình --</option>
+                <option>MA - Hỗ trợ nhà ở cho người có công với cách mạng, thân nhân liệt sĩ</option>
+                <option>XB - Hỗ trợ hộ nghèo về nhà ở</option>
+                <option>VC - Hỗ trợ hộ nghèo, hộ cận nghèo trên địa bàn huyện nghèo</option>
+                <option>CV - Hỗ trợ hộ nghèo xây dựng nhà ở phòng, tránh bão, lụt khu vực miền Trung</option>
+                <option>LH - Xây dựng cụm, tuyến dân cư và nhà ở vùng ngập lũ vùng đồng bằng sông Cửu Long</option>
+                <option>TQ - Giải quyết tình trạng thiếu đất ở, nhà ở, đất sản xuất, nước sinh hoạt</option>
+                <option>NL - Thực hiện xóa nhà tạm, nhà dột nát do Mặt trận Tổ quốc Việt Nam thực hiện</option>
+                <option>BC - Các chính sách hỗ trợ khác</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Họ và tên <span class="req">*</span></label>
+              <input id="p5_name" type="text" placeholder="Nhập liệu">
+            </div>
+            <div class="field">
+              <label>Số căn cước <span class="req">*</span></label>
+              <input id="p5_id" type="text" placeholder="Nhập liệu">
+            </div>
+            <div class="field">
+              <label>Địa chỉ <span class="req">*</span></label>
+              <input id="p5_addr" type="text" placeholder="Nhập liệu">
+            </div>
+          </div>
+          <div style="margin-top:15px">
+            <button class="btn primary" onclick="p5Add()">+ Cập nhật vào bảng</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bảng tổng hợp -->
+      <div class="card">
+        <div class="head" style="cursor:default">
+          <span class="num">▦</span>
+          <h3>Danh sách cá nhân được hỗ trợ</h3>
+        </div>
+        <div class="body">
+          <div class="tbl-wrap">
+            <table class="eform">
+              <thead>
+                <tr>
+                  <th class="center" style="width:44px">TT</th>
+                  <th>Tên chương trình hỗ trợ</th>
+                  <th style="width:190px">Họ và tên</th>
+                  <th style="width:150px">Số căn cước</th>
+                  <th style="width:260px">Địa chỉ</th>
+                  <th class="center" style="width:90px">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="p5_body">
+                <tr class="p5-empty"><td colspan="6" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — chọn chương trình, nhập thông tin rồi bấm "Cập nhật vào bảng".</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pane5 -->
+
+    <!-- ===================== PANE 7 ===================== -->
+    <div class="tabpane" id="pane7" style="display:none">
+      <div class="subtabbar">
+        <button id="s7a" class="active" onclick="showSub7('a')">1. Tổ chức, cá nhân nước ngoài sở hữu nhà ở</button>
+        <button id="s7b" onclick="showSub7('b')">2. Nhà ở thuộc tài sản công</button>
+      </div>
+
+      <!-- ===== Sub 7A ===== -->
+      <div id="sub7a">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Tổ chức, cá nhân nước ngoài sở hữu nhà ở</h3></div>
+          <div class="body">
+            <div class="grid three">
+              <div class="fsec">Thông tin đối tượng sở hữu *</div>
+              <div class="field">
+                <label>Đối tượng <span class="req">*</span></label>
+                <select id="a_obj" onchange="p7aFillObj()">
+                  <option value="">-- Chọn đối tượng --</option>
+                  <option>Cá nhân</option>
+                  <option>Tổ chức nước ngoài sở hữu nhà ở thông qua việc thực hiện dự án ĐTXD nhà ở tại Việt Nam</option>
+                  <option>Tổ chức nước ngoài sở hữu nhà ở thông qua việc mua, thuê mua nhà ở thương mại của CĐT dự án ĐTXD nhà ở, nhận tặng cho, nhận thừa kế nhà ở thương mại</option>
+                </select>
+              </div>
+              <div id="a_obj_fields" style="display:contents"></div>
+
+              <div class="fsec">Thông tin dự án *</div>
+              <div class="field"><label>Tên chủ đầu tư <span class="req">*</span></label><input id="a_cdt" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Tên dự án <span class="req">*</span></label><input id="a_da" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Địa điểm xây dựng <span class="req">*</span></label><input id="a_diadiem" type="text" placeholder="Nhập liệu"></div>
+
+              <div class="fsec">Thông tin BĐS *</div>
+              <div class="field"><label>Số nhà / Số căn hộ <span class="req">*</span></label><input id="a_canho" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Mã định danh BĐS (nếu có)</label><input id="a_madd" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Diện tích <span class="req">*</span></label><input id="a_dt" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Tình trạng pháp lý <span class="req">*</span></label><select id="a_pl"><option value="">-- Chọn --</option><option>Đã được cấp giấy chứng nhận</option><option>Chưa được cấp</option></select></div>
+              <div class="field"><label>Thời hạn sở hữu <span class="req">*</span></label><input id="a_th" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Tình trạng gia hạn</label><select id="a_gh"><option value="">-- Chọn --</option><option>Đã gia hạn</option><option>Chưa được gia hạn</option></select></div>
+            </div>
+            <div style="margin-top:15px"><button class="btn primary" onclick="p7aAdd()">+ Cập nhật vào bảng</button></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — tổ chức, cá nhân nước ngoài sở hữu nhà ở</h3></div>
+          <div class="body">
+            <div class="tbl-wrap">
+              <table class="eform" style="min-width:1600px">
+                <thead><tr>
+                  <th class="center" style="width:44px">STT</th>
+                  <th>Tên chủ đầu tư</th><th>Tên dự án</th><th>Địa điểm xây dựng</th>
+                  <th>Số nhà/Số căn hộ</th><th>Mã định danh BĐS</th><th>Diện tích</th><th>Tình trạng pháp lý</th><th>Thời hạn sở hữu</th><th>Tình trạng gia hạn</th>
+                  <th style="width:180px">Đối tượng</th>
+                  <th>Họ và tên / Tên tổ chức</th><th>Quốc tịch / GCN đăng ký đầu tư</th><th>Số định danh (CN-HC / tổ chức)</th>
+                  <th class="center" style="width:90px">Thao tác</th>
+                </tr></thead>
+                <tbody id="p7a_body"><tr class="p7a-empty"><td colspan="15" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Sub 7B ===== -->
+      <div id="sub7b" style="display:none">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Nhà ở thuộc tài sản công</h3></div>
+          <div class="body">
+            <div class="grid three">
+              <div class="field full"><label>Cơ quan đại diện chủ sở hữu nhà ở <span class="req">*</span></label><input id="b_cq" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Loại nhà ở <span class="req">*</span></label><select id="b_loai"><option value="">-- Chọn loại --</option><option>Nhà ở phục vụ tái định cư</option><option>Nhà ở công vụ</option><option>Nhà ở xã hội</option><option>Nhà ở cũ</option><option>Nhà ở khác (nếu có)</option></select></div>
+              <div class="field"><label>Số lượng <span class="req">*</span></label><input id="b_sl" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Diện tích <span class="req">*</span></label><input id="b_dt" type="text" placeholder="Nhập số"></div>
+              <div class="fsec">Tình trạng quản lý</div>
+              <div class="field"><label>Cho thuê</label><input id="b_t1" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Cho thuê mua</label><input id="b_t2" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Bán</label><input id="b_t3" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Chưa bố trí sử dụng</label><input id="b_t4" type="text" placeholder="Nhập số"></div>
+            </div>
+            <div style="margin-top:15px"><button class="btn primary" onclick="p7bAdd()">+ Cập nhật vào bảng</button></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — nhà ở thuộc tài sản công</h3></div>
+          <div class="body">
+            <div class="tbl-wrap">
+              <table class="eform" style="min-width:1150px">
+                <thead><tr>
+                  <th class="center" style="width:44px">STT</th>
+                  <th>Cơ quan đại diện chủ sở hữu</th><th>Loại nhà ở</th>
+                  <th class="center">Số lượng</th><th class="center">Diện tích</th>
+                  <th class="center">Cho thuê</th><th class="center">Cho thuê mua</th><th class="center">Bán</th><th class="center">Chưa bố trí sử dụng</th>
+                  <th class="center" style="width:90px">Thao tác</th>
+                </tr></thead>
+                <tbody id="p7b_body"><tr class="p7b-empty"><td colspan="10" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pane7 -->
+
+    <!-- ===================== PANE 8 ===================== -->
+    <div class="tabpane" id="pane8" style="display:none">
+
+      <!-- Form nhập -->
+      <div class="card">
+        <div class="head" style="cursor:default"><h3>Cá nhân đã được mua, thuê, thuê mua nhà ở xã hội</h3></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="fsec">Thông tin dự án *</div>
+            <div class="field"><label>Tên dự án <span class="req">*</span></label><input id="d8_da" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Địa điểm dự án <span class="req">*</span></label><input id="d8_diadiem" type="text" placeholder="Nhập liệu"></div>
+
+            <div class="fsec">Thông tin cá nhân được mua / thuê mua / thuê nhà ở xã hội *</div>
+            <div class="field"><label>Họ và tên <span class="req">*</span></label><input id="d8_hoten" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Địa chỉ đăng ký thường trú / tạm trú <span class="req">*</span></label><input id="d8_diachi" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Căn cước công dân / số định danh cá nhân <span class="req">*</span></label><input id="d8_cccd" type="text" placeholder="Nhập liệu"></div>
+            <div class="field">
+              <label>Hình thức mua, thuê mua, thuê nhà ở xã hội <span class="req">*</span></label>
+              <select id="d8_hinhthuc">
+                <option value="">-- Chọn 1 hình thức --</option>
+                <option>Mua</option>
+                <option>Thuê mua</option>
+                <option>Thuê</option>
+              </select>
+            </div>
+
+            <div class="fsec">Người có tên trong hộ gia đình (nếu đối tượng là hộ gia đình)</div>
+            <div id="d8_hg_list" style="display:contents"></div>
+            <div class="field full"><button class="btn" type="button" onclick="d8AddMember()">+ Thêm người thân</button></div>
+          </div>
+          <div style="margin-top:15px"><button class="btn primary" onclick="p8Add()">+ Cập nhật vào bảng</button></div>
+        </div>
+      </div>
+
+      <!-- Bảng tổng hợp -->
+      <div class="card">
+        <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — cá nhân mua / thuê mua / thuê nhà ở xã hội</h3></div>
+        <div class="body">
+          <div class="tbl-wrap">
+            <table class="eform" style="min-width:1500px">
+              <thead><tr>
+                <th class="center" style="width:44px">TT</th>
+                <th>Tên dự án</th><th>Địa điểm dự án</th>
+                <th>[Cá nhân] Họ và tên</th><th>[Cá nhân] Địa chỉ TT/TT</th><th>[Cá nhân] CCCD/Số định danh</th>
+                <th>[Hộ GĐ] Họ và tên</th><th>[Hộ GĐ] CCCD/Số định danh</th>
+                <th class="center" style="width:110px">Hình thức</th>
+                <th class="center" style="width:90px">Thao tác</th>
+              </tr></thead>
+              <tbody id="p8_body"><tr class="p8-empty"><td colspan="10" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pane8 -->
+
+    <!-- ===================== PANE 9 ===================== -->
+    <div class="tabpane" id="pane9" style="display:none">
+      <div class="subtabbar">
+        <button id="s9a" class="active" onclick="showSub9('a')">1. Tổ chức, doanh nghiệp</button>
+        <button id="s9b" onclick="showSub9('b')">2. Số lượng, giá trị giao dịch BĐS</button>
+      </div>
+
+      <!-- ===== Sub 9A ===== -->
+      <div id="sub9a">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Thông tin về tổ chức, doanh nghiệp</h3></div>
+          <div class="body">
+            <div class="grid three">
+              <div class="field">
+                <label>Loại hình <span class="req">*</span></label>
+                <select id="e9a_loai" onchange="e9aUpdLabel()">
+                  <option value="">-- Chọn loại hình --</option>
+                  <option>Sàn giao dịch</option>
+                  <option>Tổ chức kinh doanh dịch vụ môi giới</option>
+                  <option>Tổ chức kinh doanh dịch vụ tư vấn, quản lý bất động sản</option>
+                </select>
+              </div>
+              <div class="field"><label id="e9a_tenlabel">Tên tổ chức / sàn giao dịch <span class="req">*</span></label><input id="e9a_ten" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Số định danh tổ chức <span class="req">*</span></label><input id="e9a_sdtc" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Số định danh cá nhân của người quản lý điều hành <span class="req">*</span></label><input id="e9a_sdcn" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Địa chỉ <span class="req">*</span></label><input id="e9a_diachi" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Tình trạng hoạt động <span class="req">*</span></label>
+                <select id="e9a_tt"><option value="">-- Chọn --</option><option>Đang hoạt động</option><option>Tạm ngừng</option><option>Chấm dứt</option></select>
+              </div>
+              <div class="fsec">Nhân sự</div>
+              <div class="field"><label>Số lượng nhân viên</label><input id="e9a_nv" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Số lượng nhân viên có chứng chỉ hành nghề môi giới BĐS <span class="req">*</span></label><input id="e9a_nvcc" type="text" placeholder="Nhập số"></div>
+            </div>
+            <div style="margin-top:15px"><button class="btn primary" onclick="e9aAdd()">+ Cập nhật vào bảng</button></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — tổ chức, doanh nghiệp</h3></div>
+          <div class="body">
+            <div class="tbl-wrap">
+              <table class="eform" style="min-width:1500px">
+                <thead><tr>
+                  <th class="center" style="width:44px">STT</th>
+                  <th style="width:180px">Loại hình</th><th>Tên</th><th>Số định danh tổ chức</th><th>Số ĐD cá nhân người QLĐH</th><th>Địa chỉ</th><th>Tình trạng hoạt động</th>
+                  <th class="center">Số lượng nhân viên</th><th class="center">Số NV có chứng chỉ môi giới</th>
+                  <th class="center" style="width:90px">Thao tác</th>
+                </tr></thead>
+                <tbody id="p9a_body"><tr class="p9a-empty"><td colspan="10" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Sub 9B ===== -->
+      <div id="sub9b" style="display:none">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Số lượng, giá trị giao dịch BĐS qua Sàn / Tổ chức môi giới</h3></div>
+          <div class="body">
+            <div class="grid three">
+              <div class="field"><label>Loại hình bất động sản <span class="req">*</span></label>
+                <select id="e9b_type" onchange="e9bFillDetail()"><option value="">-- Chọn --</option></select>
+              </div>
+              <div class="field"><label>Loại hình chi tiết <span class="req">*</span></label>
+                <select id="e9b_detail"><option value="">-- Chọn loại hình BĐS trước --</option></select>
+              </div>
+              <div class="field"><label>Tên dự án <span class="req">*</span></label><input id="e9b_da" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Số lượng (căn, lô) <span class="req">*</span></label><input id="e9b_sl" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Diện tích (m²) <span class="req">*</span></label><input id="e9b_dt" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Giá bán/m² (triệu đồng) <span class="req">*</span></label><input id="e9b_gia" type="text" placeholder="Nhập số"></div>
+              <div class="field"><label>Giá trị hợp đồng (không gồm thuế, phí chuyển nhượng)</label><input id="e9b_gthd" type="text" placeholder="Nhập số"></div>
+            </div>
+            <div style="margin-top:15px"><button class="btn primary" onclick="e9bAdd()">+ Cập nhật vào bảng</button></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — số lượng, giá trị giao dịch BĐS</h3></div>
+          <div class="body">
+            <div class="tbl-wrap">
+              <table class="eform" style="min-width:1350px">
+                <thead><tr>
+                  <th class="center" style="width:44px">STT</th>
+                  <th style="width:230px">Loại hình bất động sản</th><th>Loại hình chi tiết</th><th>Tên dự án</th>
+                  <th class="center">Số lượng (căn, lô)</th><th class="center">Diện tích (m²)</th><th class="center">Giá bán/m² (triệu đồng)</th><th class="center">Giá trị hợp đồng</th>
+                  <th class="center" style="width:90px">Thao tác</th>
+                </tr></thead>
+                <tbody id="p9b_body"><tr class="p9b-empty"><td colspan="9" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pane9 -->
+
+    <!-- ===================== PANE 10 ===================== -->
+    <div class="tabpane" id="pane10" style="display:none">
+      <div class="card">
+        <div class="head" style="cursor:default"><h3>Cá nhân được cấp chứng chỉ hành nghề môi giới bất động sản</h3></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="field"><label>Số Quyết định <span class="req">*</span></label><input id="n10_sqd" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Số hiệu chứng chỉ <span class="req">*</span></label><input id="n10_shcc" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Ngày cấp chứng chỉ <span class="req">*</span></label><input id="n10_ngaycap" type="text" placeholder="Chọn thời điểm" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></div>
+            <div class="field"><label>Họ và tên <span class="req">*</span></label><input id="n10_hoten" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Số định danh cá nhân <span class="req">*</span></label><input id="n10_sdd" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Ngày/tháng/năm sinh <span class="req">*</span></label><input id="n10_ns" type="text" placeholder="Chọn thời điểm" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'"></div>
+          </div>
+          <div style="margin-top:15px"><button class="btn primary" onclick="n10Add()">+ Cập nhật vào bảng</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — cá nhân được cấp chứng chỉ môi giới BĐS</h3></div>
+        <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:1100px">
+          <thead><tr><th class="center" style="width:44px">STT</th><th>Số Quyết định</th><th>Số hiệu chứng chỉ</th><th>Ngày cấp chứng chỉ</th><th>Họ và tên</th><th>Số định danh cá nhân</th><th>Ngày/tháng/năm sinh</th><th class="center" style="width:90px">Thao tác</th></tr></thead>
+          <tbody id="p10_body"><tr class="p10-empty"><td colspan="8" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+        </table></div></div>
+      </div>
+    </div><!-- /pane10 -->
+
+    <!-- ===================== PANE 11 ===================== -->
+    <div class="tabpane" id="pane11" style="display:none">
+      <div class="card">
+        <div class="head" style="cursor:default"><h3>Cơ sở đào tạo, bồi dưỡng kiến thức hành nghề môi giới BĐS, điều hành sàn giao dịch BĐS</h3></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="field"><label>Tên cơ sở đào tạo <span class="req">*</span></label><input id="n11_ten" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Số định danh tổ chức <span class="req">*</span></label><input id="n11_sdtc" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Số định danh cá nhân của người quản lý điều hành <span class="req">*</span></label><input id="n11_sdcn" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Địa chỉ đăng ký hoạt động <span class="req">*</span></label><input id="n11_diachi" type="text" placeholder="Nhập liệu"></div>
+            <div class="field full"><label>Giấy chứng nhận đăng ký doanh nghiệp và các thông tin pháp lý có liên quan</label><input id="n11_file" type="text" placeholder="Đính kèm / đường dẫn tệp (PDF)"></div>
+          </div>
+          <div style="margin-top:15px"><button class="btn primary" onclick="n11Add()">+ Cập nhật vào bảng</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — cơ sở đào tạo, bồi dưỡng</h3></div>
+        <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:1200px">
+          <thead><tr><th class="center" style="width:44px">STT</th><th>Tên cơ sở đào tạo</th><th>Số định danh tổ chức</th><th>Số ĐD cá nhân người QLĐH</th><th>Địa chỉ đăng ký hoạt động</th><th>Giấy CN ĐKDN (đính kèm)</th><th class="center" style="width:90px">Thao tác</th></tr></thead>
+          <tbody id="p11_body"><tr class="p11-empty"><td colspan="7" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+        </table></div></div>
+      </div>
+    </div><!-- /pane11 -->
+
+    <!-- ===================== PANE 12 ===================== -->
+    <div class="tabpane" id="pane12" style="display:none">
+      <div class="subtabbar">
+        <button id="s12a" class="active" onclick="showSub12('a')">1. Đơn vị quản lý vận hành nhà chung cư</button>
+        <button id="s12b" onclick="showSub12('b')">2. Ban quản trị nhà chung cư</button>
+      </div>
+
+      <div id="sub12a">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Đơn vị quản lý vận hành nhà chung cư — Danh sách nhân viên</h3></div>
+          <div class="body">
+            <div class="grid three">
+              <div class="field full"><label>Mã định danh điện tử của đơn vị quản lý vận hành nhà chung cư <span class="req">*</span></label><input id="n12a_ma" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Lĩnh vực <span class="req">*</span></label>
+                <select id="n12a_linhvuc">
+                  <option value="">-- Chọn lĩnh vực --</option>
+                  <option>Lĩnh vực xây dựng</option>
+                  <option>Kỹ thuật điện, nước</option>
+                  <option>Phòng cháy, chữa cháy</option>
+                  <option>Vận hành thang máy</option>
+                </select>
+              </div>
+              <div class="field"><label>Họ và tên <span class="req">*</span></label><input id="n12a_ten" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Số định danh cá nhân <span class="req">*</span></label><input id="n12a_sdd" type="text" placeholder="Nhập liệu"></div>
+            </div>
+            <div style="margin-top:15px"><button class="btn primary" onclick="n12aAdd()">+ Cập nhật vào bảng</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — danh sách nhân viên</h3></div>
+          <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:900px">
+            <thead><tr>
+              <th class="center" style="width:44px">STT</th><th style="width:200px">Mã định danh đơn vị QLVH</th><th style="width:190px">Lĩnh vực</th><th>Họ và tên</th><th>Số định danh cá nhân</th>
+              <th class="center" style="width:90px">Thao tác</th>
+            </tr></thead>
+            <tbody id="p12a_body"><tr class="p12a-empty"><td colspan="6" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+          </table></div></div>
+        </div>
+      </div>
+
+      <div id="sub12b" style="display:none">
+        <div class="card">
+          <div class="head" style="cursor:default"><h3>Ban quản trị nhà chung cư</h3></div>
+          <div class="body">
+            <div class="grid three">
+              <div class="field"><label>Tên ban quản trị tòa nhà <span class="req">*</span></label><input id="n12b_ten" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Họ và tên thành viên <span class="req">*</span></label><input id="n12b_hoten" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Số định danh cá nhân <span class="req">*</span></label><input id="n12b_sdd" type="text" placeholder="Nhập liệu"></div>
+              <div class="field"><label>Chức danh <span class="req">*</span></label><select id="n12b_chucdanh"><option value="">-- Chọn --</option><option>Trưởng ban</option><option>Phó ban</option><option>Thành viên</option></select></div>
+              <div class="field full"><label>Quyết định công nhận ban quản trị nhà chung cư <span class="req">*</span></label><input id="n12b_qd" type="text" placeholder="Đính kèm / đường dẫn tệp (PDF)"></div>
+            </div>
+            <div style="margin-top:15px"><button class="btn primary" onclick="n12bAdd()">+ Cập nhật vào bảng</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — ban quản trị nhà chung cư</h3></div>
+          <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:1100px">
+            <thead><tr><th class="center" style="width:44px">STT</th><th style="width:200px">Tên ban quản trị tòa nhà</th><th>Họ và tên thành viên</th><th>Số định danh cá nhân</th><th style="width:130px">Chức danh</th><th>Quyết định công nhận BQT (đính kèm)</th><th class="center" style="width:90px">Thao tác</th></tr></thead>
+            <tbody id="p12b_body"><tr class="p12b-empty"><td colspan="7" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+          </table></div></div>
+        </div>
+      </div>
+    </div><!-- /pane12 -->
+
+    <!-- ===================== PANE 15 ===================== -->
+    <div class="tabpane" id="pane15" style="display:none">
+      <div class="card">
+        <div class="head" style="cursor:default"><h3>Thuế đối với hoạt động chuyển nhượng bất động sản <span style="font-weight:400;font-size:12px;color:var(--muted)">(Kỳ báo cáo: Quý)</span></h3></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="field"><label>Loại bất động sản <span class="req">*</span></label>
+              <select id="n15_loai"><option value="">-- Chọn --</option><option>Đất ở đô thị</option><option>Đất ở nông thôn</option><option>Bất động sản khác</option></select>
+            </div>
+            <div class="field full"><label>Thuế thu nhập cá nhân phải nộp (thu nhập từ hoạt động chuyển nhượng BĐS) <span class="req">*</span></label><input id="n15_thue" type="text" placeholder="Nhập số (triệu đồng)"></div>
+          </div>
+          <div style="margin-top:15px"><button class="btn primary" onclick="n15Add()">+ Cập nhật vào bảng</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — thuế chuyển nhượng bất động sản</h3></div>
+        <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:800px">
+          <thead><tr><th class="center" style="width:44px">STT</th><th>Loại bất động sản</th><th>Thuế TNCN phải nộp (từ chuyển nhượng BĐS)</th><th class="center" style="width:90px">Thao tác</th></tr></thead>
+          <tbody id="p15_body"><tr class="p15-empty"><td colspan="4" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — chọn loại, nhập số rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+        </table></div></div>
+      </div>
+    </div><!-- /pane15 -->
+
+    <!-- ===================== PANE 16 ===================== -->
+    <div class="tabpane" id="pane16" style="display:none">
+      <div class="card">
+        <div class="head" style="cursor:default"><span class="num">i</span><h3>Hoạt động đầu tư có vốn nước ngoài <span style="font-weight:400;font-size:12px;color:var(--muted)">(Kỳ báo cáo: Quý)</span></h3></div>
+        <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:1100px">
+          <thead><tr>
+            <th class="center" style="width:46px">TT</th><th>Nội dung</th>
+            <th class="center" style="width:150px">Số dư đầu kỳ <span class="req">*</span></th>
+            <th class="center" style="width:170px">Số trong kỳ báo cáo <span class="req">*</span></th>
+            <th class="center" style="width:160px">Số lũy kế từ đầu năm <span class="req">*</span></th>
+          </tr></thead>
+          <tbody>
+            <tr style="background:#f3f6fb;font-weight:700"><td class="center">I</td><td colspan="4">Thông tin về vốn đầu tư trực tiếp nước ngoài vào lĩnh vực kinh doanh bất động sản</td></tr>
+            <tr><td class="center"><span class="tt">1</span></td><td>Tổng vốn đăng ký cấp mới của nhà đầu tư nước ngoài vào lĩnh vực bất động sản</td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">2</span></td><td>Tổng vốn điều chỉnh của nhà đầu tư nước ngoài vào lĩnh vực bất động sản</td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">3</span></td><td>Tổng vốn góp vốn, mua cổ phần của nhà đầu tư nước ngoài vào lĩnh vực bất động sản</td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">4</span></td><td>Vốn đầu tư trực tiếp nước ngoài (FDI) đã giải ngân vào lĩnh vực bất động sản</td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">5</span></td><td>Tỷ trọng vốn đầu tư nước ngoài vào Việt Nam trong lĩnh vực kinh doanh BĐS / toàn ngành kinh tế</td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr style="background:#f3f6fb;font-weight:700"><td class="center">II</td><td colspan="4">Hoạt động của doanh nghiệp có ngành nghề kinh doanh bất động sản</td></tr>
+            <tr><td class="center"><span class="tt">1</span></td><td>Số lượng doanh nghiệp đăng ký hoạt động mới</td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">2</span></td><td>Số lượng doanh nghiệp tạm dừng hoạt động</td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">3</span></td><td>Số lượng doanh nghiệp giải thể</td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+          </tbody>
+        </table></div></div>
+      </div>
+    </div><!-- /pane16 -->
+
+    <!-- ===================== PANE 17 ===================== -->
+    <div class="tabpane" id="pane17" style="display:none">
+      <div class="card">
+        <div class="head" style="cursor:default"><h3>Phát hành trái phiếu doanh nghiệp trong lĩnh vực kinh doanh BĐS</h3></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="field full"><label>Tên tổ chức phát hành <span class="req">*</span></label><input id="n17_ten" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Thị trường <span class="req">*</span></label><select id="n17_tt"><option value="">-- Chọn --</option><option>Trong nước</option><option>Quốc tế</option></select></div>
+            <div class="field"><label>Số lượng trái phiếu phát hành</label><input id="n17_sl" type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Tổng giá trị trái phiếu phát hành (tính đến thời điểm báo cáo) <span class="req">*</span></label><input id="n17_tong" type="text" placeholder="Nhập số"></div>
+          </div>
+          <div style="margin-top:15px"><button class="btn primary" onclick="n17Add()">+ Cập nhật vào bảng</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — phát hành trái phiếu doanh nghiệp</h3></div>
+        <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:1000px">
+          <thead><tr><th class="center" style="width:44px">STT</th><th>Tên tổ chức phát hành</th><th class="center" style="width:150px">Thị trường</th><th class="center">Số lượng trái phiếu phát hành</th><th class="center">Tổng giá trị trái phiếu phát hành</th><th class="center" style="width:90px">Thao tác</th></tr></thead>
+          <tbody id="p17_body"><tr class="p17-empty"><td colspan="6" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+        </table></div></div>
+      </div>
+    </div><!-- /pane17 -->
+
+    <!-- ===================== PANE 18 ===================== -->
+    <div class="tabpane" id="pane18" style="display:none">
+      <div class="card">
+        <div class="head" style="cursor:default"><span class="num">i</span><h3>Tín dụng trong lĩnh vực bất động sản; thế chấp, giải chấp</h3></div>
+        <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:1000px">
+          <thead><tr><th class="center" style="width:50px">STT</th><th>Nội dung <span class="req">*</span></th><th class="center" style="width:240px">Giá trị dư nợ tín dụng <span class="req">*</span></th></tr></thead>
+          <tbody>
+            <tr style="background:#f3f6fb;font-weight:700"><td class="center">I</td><td colspan="2">Dư nợ tín dụng đối với hoạt động đầu tư, kinh doanh bất động sản</td></tr>
+            <tr><td class="center"><span class="tt">1</span></td><td>Dư nợ tín dụng đối với chủ đầu tư để đầu tư xây dựng sửa chữa nhà ở để bán, cho thuê, cho thuê mua</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">2</span></td><td>Dư nợ tín dụng để đầu tư xây dựng, mua, thuê văn phòng, cao ốc để bán, cho thuê, cho thuê mua</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">3</span></td><td>Dư nợ tín dụng để đầu tư xây dựng hạ tầng kỹ thuật, công trình xây dựng trong khu công nghiệp, cụm công nghiệp, khu chế xuất, khu công nghệ cao, khu kinh tế để bán, cho thuê, cho thuê mua</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">4</span></td><td>Dư nợ tín dụng để đầu tư xây dựng, mua, thuê khu du lịch, sinh thái, nghỉ dưỡng để bán, cho thuê, cho thuê mua</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">5</span></td><td>Dư nợ tín dụng để đầu tư xây dựng, mua, thuê nhà hàng, khách sạn để bán, cho thuê, cho thuê mua</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">6</span></td><td>Dư nợ tín dụng đối với khách hàng mua, thuê nhà ở để bán, cho thuê</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">7</span></td><td>Dư nợ tín dụng đối với khách hàng mua, nhận chuyển nhượng, thuê quyền sử dụng đất để kinh doanh</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center"><span class="tt">8</span></td><td>Dư nợ tín dụng đầu tư kinh doanh bất động sản khác</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr style="background:#f3f6fb;font-weight:700"><td class="center">II</td><td>Số dư bảo lãnh nhà ở hình thành trong tương lai</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr style="background:#f4f8ff;font-weight:700"><td class="center">III</td><td>Tổng dư nợ tín dụng trong lĩnh vực kinh doanh bất động sản</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+            <tr><td class="center">IV</td><td>Tỷ trọng dư nợ tín dụng đối với hoạt động kinh doanh trong lĩnh vực bất động sản so với tổng dư nợ tín dụng toàn ngành kinh tế (%)</td><td><input class="cell" type="text" placeholder="Nhập số"></td></tr>
+          </tbody>
+        </table></div></div>
+      </div>
+    </div><!-- /pane18 -->
+
+    <!-- ===================== PANE 19 ===================== -->
+    <div class="tabpane" id="pane19" style="display:none">
+      <div class="card">
+        <div class="head" style="cursor:default"><h3>Giao dịch BĐS thông qua hoạt động công chứng, chứng thực</h3></div>
+        <div class="body">
+          <div class="grid three">
+            <div class="fsec">Thông tin về hợp đồng</div>
+            <div class="field"><label>Số, ký hiệu hợp đồng mua bán, cho thuê <span class="req">*</span></label><input id="n19_sohd" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Mã định danh BĐS đưa vào giao dịch</label><input id="n19_madd" type="text" placeholder="Không bắt buộc"></div>
+            <div class="field"><label>Số căn cước của bên bán <span class="req">*</span></label><input id="n19_cccdban" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Số căn cước của bên mua <span class="req">*</span></label><input id="n19_cccdmua" type="text" placeholder="Nhập liệu"></div>
+            <div class="field"><label>Loại hình bất động sản <span class="req">*</span></label>
+              <select id="n19_type" onchange="n19FillDetail()"><option value="">-- Chọn --</option></select>
+            </div>
+            <div class="field"><label>Loại hình chi tiết <span class="req">*</span></label>
+              <select id="n19_detail"><option value="">-- Chọn loại hình BĐS trước --</option></select>
+            </div>
+
+            <div class="fsec">Giá trị hợp đồng</div>
+            <div class="field"><label>Số lượng (căn, lô, phòng) <span class="req">*</span></label><input id="n19_sl" type="text" placeholder="Nhập số"></div>
+            <div class="field"><label>Diện tích (m²) <span class="req">*</span></label><input id="n19_dt" type="text" placeholder="Nhập số" oninput="n19Calc()"></div>
+            <div class="field"><label>Giá trị hợp đồng mua, bán <span class="req">*</span> <span style="font-weight:400;color:var(--muted)">(không gồm thuế, phí chuyển nhượng)</span></label><input id="n19_gthd" type="text" placeholder="Nhập số" oninput="n19Calc()"></div>
+            <div class="field"><label>Giá bán BĐS/m² (triệu đồng) <span style="font-weight:400;color:var(--muted)">(hệ thống tự tính = Giá trị HĐ ÷ Diện tích)</span></label><input id="n19_gia" type="text" placeholder="Tự tính" readonly></div>
+
+            <div class="fsec">Loại hình giao dịch &amp; công chứng</div>
+            <div class="field"><label>Loại hình giao dịch <span class="req">*</span></label>
+              <select id="n19_lhgd"><option value="">-- Chọn --</option><option>Mua bán</option><option>Chuyển nhượng hợp đồng</option><option>Cho thuê</option><option>Cho thuê lại</option><option>Cho thuê mua</option></select>
+            </div>
+            <div class="field"><label>Công chứng / chứng thực <span class="req">*</span></label>
+              <select id="n19_cc"><option value="">-- Chọn --</option><option>Công chứng</option><option>Chứng thực</option></select>
+            </div>
+          </div>
+          <div style="margin-top:15px"><button class="btn primary" onclick="n19Add()">+ Cập nhật vào bảng</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head" style="cursor:default"><span class="num">▦</span><h3>Bảng tổng hợp — giao dịch BĐS qua công chứng, chứng thực</h3></div>
+        <div class="body"><div class="tbl-wrap"><table class="eform" style="min-width:2100px">
+          <thead><tr>
+            <th class="center" style="width:44px">STT</th>
+            <th style="width:200px">Loại hình BĐS</th><th>Loại hình chi tiết</th>
+            <th>Số/ký hiệu hợp đồng</th><th>Mã định danh BĐS</th><th>Số căn cước bên bán</th><th>Số căn cước bên mua</th>
+            <th class="center">Số lượng</th><th class="center">Diện tích (m²)</th><th class="center">Giá bán/m² (triệu đồng)</th><th class="center">Giá trị hợp đồng</th>
+            <th>Loại hình giao dịch</th><th class="center">Công chứng/chứng thực</th>
+            <th class="center" style="width:90px">Thao tác</th>
+          </tr></thead>
+          <tbody id="p19_body"><tr class="p19-empty"><td colspan="14" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr></tbody>
+        </table></div></div>
+      </div>
+    </div><!-- /pane19 -->
+
+    <div class="footbar">
+      <span class="left">Trạng thái: <strong>Nháp</strong> · Cập nhật gần nhất 04/06/2026</span>
+      <button class="btn" onclick="toast('Đã lưu bản nháp')">💾 Lưu nháp</button>
+      <button class="btn primary" onclick="toast('Đã gửi Bộ Xây dựng phê duyệt')">📤 Gửi phê duyệt</button>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ---- Collapsible ----
+  function toggleCard(id){document.getElementById(id).classList.toggle('collapsed');}
+  function togglePanel(id){document.getElementById(id).classList.toggle('collapsed');}
+  let allCollapsed=false;
+  function toggleAll(){
+    allCollapsed=!allCollapsed;
+    document.querySelectorAll('.card').forEach(c=>c.classList.toggle('collapsed',allCollapsed));
+  }
+
+  // ---- Build Biểu 3 rows ----
+  const rows3=[
+    "Nhà ở thương mại","Nhà ở xã hội","Nhà ở công vụ","Nhà ở phục vụ tái định cư",
+    "Cải tạo, xây dựng lại nhà chung cư","Nhà ở của hộ gia đình, cá nhân tự xây dựng",
+    "Nhà ở theo chương trình mục tiêu Quốc Gia"
+  ];
+  const tb3=document.querySelector('#tbl3 tbody');
+  rows3.forEach((name,i)=>{
+    const tr=document.createElement('tr');
+    let cells=`<td class="center"><span class="tt">${i+1}</span></td><td>${name}</td>`;
+    for(let c=0;c<6;c++) cells+=`<td><input class="cell t3" type="text" data-col="${c}" placeholder="Nhập liệu"></td>`;
+    tr.innerHTML=cells; tb3.appendChild(tr);
+  });
+
+  // ---- Auto-sum (parse numeric text; ignore non-numeric) ----
+  const num=v=>{const n=parseFloat(String(v).replace(/[^\d.-]/g,''));return isNaN(n)?0:n;};
+  function sumTable(selInputs,selTotals){
+    const totals={};
+    document.querySelectorAll(selInputs).forEach(inp=>{
+      const c=inp.dataset.col; totals[c]=(totals[c]||0)+num(inp.value);
+    });
+    document.querySelectorAll(selTotals).forEach(t=>{
+      const c=t.dataset.col; t.value=totals[c]?totals[c].toLocaleString('vi-VN'):'';
+    });
+  }
+  function recalc(){
+    sumTable('#tbl3 input.t3','#tbl3 tr.total input[data-col]');
+    sumTable('#tbl4 input.t4','#tbl4 tr.total input[data-col]');
+    updateProgress();
+  }
+
+  // ---- Progress (5 nhóm: Biểu 1-4 + đính kèm) ----
+  function groupFilled(sel){return [...document.querySelectorAll(sel)].some(i=>i.value.trim()!=='');}
+  function updateProgress(){
+    let done=0;
+    if(groupFilled('#c1 input.cell')) done++;
+    if(groupFilled('#c2 input.cell')) done++;
+    if(groupFilled('#tbl3 input.t3')) done++;
+    if(groupFilled('#tbl4 input.t4')) done++;
+    if(window._attach) done++;
+    const pct=Math.round(done/5*100);
+    const bar=document.getElementById('pbar'); if(!bar)return;
+    bar.style.width=pct+'%';
+    const lbl=document.getElementById('plabel'); if(lbl) lbl.textContent=`${done}/5 nhóm bắt buộc đã nhập (${pct}%)`;
+  }
+  document.addEventListener('input',e=>{ if(e.target.classList.contains('cell')) recalc(); });
+
+  // ---- Attach file mock ----
+  function pickFile(btn){
+    const inp=document.createElement('input');inp.type='file';inp.accept='.pdf';
+    inp.onchange=()=>{ if(inp.files[0]){ btn.textContent='✓ '+inp.files[0].name.slice(0,22); btn.style.background='#e7f6ec'; btn.style.color='#15803d'; btn.style.borderColor='#15803d'; window._attach=true; updateProgress(); } };
+    inp.click();
+  }
+
+  // ---- Toast ----
+  let tT;
+  function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),2200);}
+
+  // ---- Tabs ----
+  function showTab(n){
+    document.querySelectorAll('.tabpane').forEach(p=>p.style.display='none');
+    const t=document.getElementById('pane'+n); if(t) t.style.display='';
+    const rp=document.getElementById('reportPick'); if(rp) rp.value=String(n);
+    document.querySelectorAll('aside a.subitem').forEach(a=>a.classList.toggle('active', a.getAttribute('data-rep')===String(n)));
+  }
+  function toggleSubmenu(e){ if(e) e.preventDefault(); var g=document.getElementById('navKhaibao'); if(g) g.classList.toggle('collapsed'); }
+  document.addEventListener('DOMContentLoaded',function(){ showTab(1); });
+  function pickReport(sel){ if(sel.value) showTab(+sel.value); }
+
+  // ---- Nhóm 2: form → bảng (điều tra dân số & nhà ở) ----
+  (function n2Init(){
+    const ps=document.getElementById('n2_prov');
+    if(ps) ['Toàn quốc','Thành phố Hà Nội','Thành phố Hồ Chí Minh','Thành phố Đà Nẵng','Thành phố Hải Phòng','Thành phố Cần Thơ','Tỉnh Quảng Ninh','Tỉnh Bình Dương','Tỉnh Đồng Nai','Tỉnh Nghệ An','Tỉnh Thanh Hóa']
+      .forEach(p=>{const o=document.createElement('option');o.textContent=p;ps.appendChild(o);});
+  })();
+  function n2Add(){ listAdd([{id:'n2_prov',req:1},{id:'n2_kv',req:1},{id:'n2_kc',req:1,center:1},{id:'n2_tkc',req:1,center:1},{id:'n2_cc',req:1,center:1},{id:'n2_rl',req:1,center:1}],'p2_body','p2-empty','n2Renum'); }
+  function n2Renum(){ listRenum('p2_body','p2-empty',8,LMSG); }
+
+  // ---- Excel: tải mẫu xuống & nhập liệu lên (theo nhóm đang xem) ----
+  function currentTab(){
+    const vis=[...document.querySelectorAll('.tabpane')].find(p=>p.style.display!=='none');
+    return vis ? (+vis.id.replace('pane','')||1) : 1;
+  }
+  function downloadExcel(){
+    let rows, fname; const t=currentTab();
+    if(t===1){
+      fname='mau-nhom1-chuong-trinh-ke-hoach-phat-trien-nha-o.csv';
+      rows=[
+        ['BIỂU 1: Diện tích nhà ở bình quân đầu người'],
+        ['TT','Chỉ tiêu','Đơn vị','CT phát triển nhà ở 2021-2030','KH phát triển nhà ở 2026-2030'],
+        ['I','Toàn Tỉnh/Thành phố','m² sàn/người','',''],
+        ['1','Đô thị','m² sàn/người','',''],
+        ['2','Nông thôn','m² sàn/người','',''],
+        [],
+        ['BIỂU 2: Dự kiến diện tích đất để phát triển nhà ở'],
+        ['TT','Loại hình','Đơn vị','CT phát triển nhà ở 2021-2030'],
+        ['1','Nhà ở xã hội','ha',''],
+        ['2','Nhà ở phục vụ tái định cư','ha',''],
+        ['3','Nhà ở công vụ','ha',''],
+        ['4','Cải tạo, xây dựng lại nhà chung cư','ha',''],
+        ['5','Nhà ở khác (nếu có)','ha',''],
+        [],
+        ['BIỂU 3: Diện tích sàn xây dựng nhà ở hoàn thành, đưa vào sử dụng (m² sàn)'],
+        ['TT','Mục tiêu, chỉ tiêu','CT-Số lượng','CT-Diện tích','KH-Số lượng','KH-Diện tích','KQ-Số lượng','KQ-Diện tích'],
+        ['1','Nhà ở thương mại','','','','','',''],
+        ['2','Nhà ở xã hội','','','','','',''],
+        ['3','Nhà ở công vụ','','','','','',''],
+        ['4','Nhà ở phục vụ tái định cư','','','','','',''],
+        ['5','Cải tạo, xây dựng lại nhà chung cư','','','','','',''],
+        ['6','Nhà ở của hộ gia đình, cá nhân tự xây dựng','','','','','',''],
+        ['7','Nhà ở theo chương trình mục tiêu Quốc Gia','','','','','',''],
+        [],
+        ['BIỂU 4: Hỗ trợ nhà ở theo chương trình mục tiêu Quốc gia về nhà ở (Hộ)'],
+        ['TT','Mục tiêu, chỉ tiêu','Đơn vị','CT 2021-2030','KH 2026-2030','Kết quả TH 2026-2030'],
+        ['1','Hộ gia đình có công với cách mạng','Hộ','','',''],
+        ['2','Hộ nghèo, hộ cận nghèo; Hộ đồng bào DTTS','Hộ','','','']
+      ];
+    } else if(t===2){
+      fname='mau-nhom2-nha-o-dieu-tra-dan-so.csv';
+      rows=[
+        ['Thông tin, dữ liệu về nhà ở trong tổng điều tra dân số và nhà ở (Đơn vị: căn)'],
+        ['Địa bàn','Khu vực','Nhà ở kiên cố và bán kiên cố','Nhà ở thiếu kiên cố và đơn sơ','Nhà ở chung cư','Nhà ở riêng lẻ'],
+        ['Toàn quốc','Toàn địa bàn','','','',''],
+        ['Toàn quốc','Đô thị','','','',''],
+        ['Toàn quốc','Nông thôn','','','',''],
+        ['Thành phố Hà Nội','Toàn địa bàn','','','',''],
+        ['Thành phố Hà Nội','Đô thị','','','',''],
+        ['Thành phố Hà Nội','Nông thôn','','','',''],
+        ['Thành phố Hồ Chí Minh','Toàn địa bàn','','','',''],
+        ['Thành phố Hồ Chí Minh','Đô thị','','','',''],
+        ['Thành phố Hồ Chí Minh','Nông thôn','','','','']
+      ];
+    } else if(t===3){
+      fname='mau-nhom3-danh-muc-san-pham-bds.csv';
+      rows=[
+        ['Danh mục sản phẩm bất động sản theo dự án'],
+        ['Tỉnh/Thành phố','Loại hình BĐS','Loại hình chi tiết','Số lượng','Diện tích (m²)','Ghi chú']
+      ];
+    } else if(t===4){
+      fname='mau-nhom4-nha-o-cong-vu.csv';
+      rows=[
+        ['Thông tin, dữ liệu về nhà ở công vụ hiện có và đang sử dụng'],
+        ['TT','Loại nhà ở công vụ','Tổng số NƠCV hiện đang quản lý (căn)','Tổng DT sử dụng NƠCV hiện đang quản lý (m2)','Tổng số NƠCV đã bố trí cho thuê (căn)','Tổng DT sử dụng NƠCV đã bố trí cho thuê (m2)','Tổng số người đang thuê (người)','Giá thuê NƠCV (nghìn đồng/m2)','Ghi chú'],
+        ['1','Biệt thự','','','','','','',''],
+        ['2','Chung cư','','','','','','',''],
+        ['3','Nhà ở liền kề','','','','','','','']
+      ];
+    } else if(t===5){
+      fname='mau-nhom5-chuong-trinh-ho-tro-nha-o.csv';
+      rows=[
+        ['Thông tin, dữ liệu về các chương trình hỗ trợ về nhà ở'],
+        ['TT','Tên chương trình hỗ trợ','Họ và tên','Số căn cước','Địa chỉ']
+      ];
+    } else if(t===8){
+      fname='mau-nhom8-ca-nhan-mua-thue-nha-o-xa-hoi.csv';
+      rows=[
+        ['Thông tin, dữ liệu về cá nhân đã được mua, thuê, thuê mua nhà ở xã hội trên địa bàn'],
+        ['TT','Tên dự án','Địa điểm dự án','[Cá nhân] Họ và tên','[Cá nhân] Địa chỉ thường trú/tạm trú','[Cá nhân] CCCD/Số định danh','[Hộ gia đình] Họ và tên','[Hộ gia đình] CCCD/Số định danh','Hình thức','Ghi chú']
+      ];
+    } else if(t===7){
+      const subB=document.getElementById('sub7b') && document.getElementById('sub7b').style.display!=='none';
+      if(subB){
+        fname='mau-nhom7-nha-o-tai-san-cong.csv';
+        rows=[
+          ['Nhà ở thuộc tài sản công'],
+          ['Cơ quan đại diện chủ sở hữu nhà ở','Loại nhà ở','Số lượng','Diện tích','Cho thuê','Cho thuê mua','Bán','Chưa bố trí sử dụng']
+        ];
+      } else {
+        fname='mau-nhom7-to-chuc-ca-nhan-nuoc-ngoai.csv';
+        rows=[
+          ['Thông tin, dữ liệu về tổ chức, cá nhân nước ngoài sở hữu nhà ở'],
+          ['STT','Tên chủ đầu tư','Tên dự án','Địa điểm xây dựng','Số nhà/Số căn hộ','Mã định danh BĐS','Diện tích','Tình trạng pháp lý','Thời hạn sở hữu','Tình trạng gia hạn','Đối tượng','Họ và tên / Tên tổ chức','Quốc tịch / GCN đăng ký đầu tư','Số định danh (CN-HC / tổ chức)']
+        ];
+      }
+    } else if(t===9){
+      const sub9b=document.getElementById('sub9b') && document.getElementById('sub9b').style.display!=='none';
+      if(sub9b){
+        fname='mau-nhom9-giao-dich-bds.csv';
+        rows=[
+          ['Số lượng, giá trị giao dịch BĐS thông qua Sàn giao dịch / Tổ chức kinh doanh dịch vụ môi giới'],
+          ['STT','Loại hình bất động sản','Loại hình chi tiết','Tên dự án','Số lượng (căn, lô)','Diện tích (m2)','Giá bán/m2 (triệu đồng)','Giá trị hợp đồng (không gồm thuế, phí chuyển nhượng)']
+        ];
+      } else {
+        fname='mau-nhom9-to-chuc-doanh-nghiep.csv';
+        rows=[
+          ['Thông tin về tổ chức, doanh nghiệp'],
+          ['STT','Loại hình','Tên','Số định danh tổ chức','Số định danh cá nhân người QLĐH','Địa chỉ','Tình trạng hoạt động','Số lượng nhân viên','Số NV có chứng chỉ hành nghề môi giới BĐS']
+        ];
+      }
+    } else {
+      // Tổng quát: dựng mẫu từ tiêu đề bảng đang hiển thị
+      const pane=[...document.querySelectorAll('.tabpane')].find(p=>p.style.display!=='none');
+      const tbl=pane ? ([...pane.querySelectorAll('table.eform')].find(x=>x.offsetParent!==null) || pane.querySelector('table.eform')) : null;
+      const ths=tbl ? [...tbl.querySelectorAll('thead th')].map(th=>th.textContent.replace(/\s+/g,' ').trim()).filter(x=>x && x!=='Thao tác') : [];
+      fname='mau-nhom'+t+'.csv';
+      rows=[ths];
+    }
+    const csv=rows.map(r=>r.map(c=>`"${(c==null?'':c).toString().replace(/"/g,'""')}"`).join(',')).join('\r\n');
+    const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=fname; a.click();
+    toast('Đã tải mẫu Excel: '+fname);
+  }
+  function importExcel(){
+    const inp=document.createElement('input'); inp.type='file'; inp.accept='.xlsx,.xls,.csv';
+    inp.onchange=()=>{ if(inp.files[0]) toast('Đã nhập dữ liệu từ tệp: '+inp.files[0].name); };
+    inp.click();
+  }
+
+  // ---- Nhóm 3: form nhập → bảng tổng hợp ----
+  const P3_TAX={
+    "Nhà ở, đất ở thương mại":["Đất nền","Chung cư","Nhà ở riêng lẻ"],
+    "Nhà ở xã hội":["Chung cư","Nhà ở riêng lẻ"],
+    "Thương mại dịch vụ / Văn phòng":["Văn phòng","Trung tâm thương mại","Văn phòng kết hợp lưu trú","Căn hộ lưu trú"],
+    "Du lịch, nghỉ dưỡng":["Biệt thự du lịch","Căn hộ du lịch"],
+    "Khu công nghiệp":["Nhà xưởng sản xuất","Đất (dùng cho mục đích sản xuất, kinh doanh tại khu công nghiệp)"],
+    "Khác":["Công trình y tế","Công trình giáo dục","Công trình văn hóa","Công trình thể dục thể thao","Công trình dịch vụ công cộng"]
+  };
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  // ================= Nhóm 3: 6 tab con =================
+  var num3=function(v){var n=parseFloat(String(v).replace(/[^\d.-]/g,''));return isNaN(n)?0:n;};
+  function showT3(n){ for(var i=1;i<=6;i++){var p=document.getElementById('t3p'+i); if(p)p.style.display=(i===n)?'':'none'; var b=document.getElementById('t3_'+i); if(b)b.classList.toggle('active',i===n);} }
+  function t3File(btn){ var inp=document.createElement('input'); inp.type='file'; inp.accept='.pdf'; inp.onchange=function(){ if(inp.files[0]){ btn.textContent='✓ '+inp.files[0].name.slice(0,16); btn.style.color='#15803d'; btn.style.borderColor='#15803d'; } }; inp.click(); }
+  // ===== Tab 1/3/4: panel theo loại hình BĐS =====
+  var PROJ_DB={'DA-2026-00123':'Van Bay Tower','DA-2026-00211':'Khu đô thị mới Phương Đông','DA-2026-00345':'Chung cư An Bình Center'};
+  (function fillProjDL(){ var dl=document.getElementById('projDL'); if(dl) Object.keys(PROJ_DB).forEach(function(k){var o=document.createElement('option');o.value=k;o.label=PROJ_DB[k];dl.appendChild(o);}); })();
+  function projFill(prefix){ var ma=g7v(prefix+'_ma'); var el=document.getElementById(prefix+'_ten'); if(el) el.value=PROJ_DB[ma]||''; }
+  function buildTaxPanels(containerId, prefix, cols){
+    var wrap=document.getElementById(containerId); if(!wrap) return; var idx=0;
+    Object.keys(P3_TAX).forEach(function(type){
+      idx++; var cid=prefix+idx;
+      var ths='<th>Loại hình chi tiết</th>'+cols.map(function(c){return '<th class="center" style="width:160px">'+c.label+'</th>';}).join('');
+      var rows=P3_TAX[type].map(function(d){ var cells=cols.map(function(c){ return '<td><input class="cell '+(c.cls||'')+'" type="text" placeholder="'+(c.ro?'Tự cộng dồn':'Nhập số')+'"'+(c.ro?' readonly style="background:#eef3fb;font-weight:600"':'')+'></td>'; }).join(''); return '<tr><td>'+esc(d)+'</td>'+cells+'</tr>'; }).join('');
+      wrap.insertAdjacentHTML('beforeend','<div class="card" id="'+cid+'"><div class="head" onclick="toggleCard(\''+cid+'\')"><h3>'+esc(type)+'</h3><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div><div class="body"><div class="tbl-wrap"><table class="eform"><thead><tr>'+ths+'</tr></thead><tbody>'+rows+'</tbody></table></div></div></div>');
+    });
+  }
+  buildTaxPanels('t3_quymo','qm',[{label:'Số lượng'},{label:'Diện tích (m²)'}]);
+  buildTaxPanels('t3c_panels','tdp',[{label:'Số lượng (đợt này)',cls:'tdp-sl'},{label:'Diện tích (m²)'},{label:'Lũy kế',cls:'tdp-lk',ro:1}]);
+  buildTaxPanels('t3d_panels','ddk',[{label:'Số lượng (đợt này)',cls:'ddk-sl'},{label:'Diện tích (m²)'},{label:'Lũy kế',cls:'ddk-lk',ro:1}]);
+  function ghiNhanDot(slCls,lkCls){
+    var n=0;
+    document.querySelectorAll('input.'+slCls).forEach(function(sl){ var tr=sl.closest('tr'); var lk=tr.querySelector('input.'+lkCls); if(!lk) return; var add=num3(sl.value); if(add){ lk.value=(num3(lk.value)+add).toLocaleString('vi-VN'); sl.value=''; n++; } });
+    toast(n?('Đã ghi nhận đợt khai báo — cộng dồn '+n+' dòng vào Lũy kế'):'Chưa có số lượng để ghi nhận');
+  }
+  // Tab6: giao dịch — form → bảng
+  function t3fFillDetail(){ var t=document.getElementById('g_type').value, ds=document.getElementById('g_detail'); ds.innerHTML='<option value="">-- Chọn --</option>'; (P3_TAX[t]||[]).forEach(function(d){var o=document.createElement('option');o.textContent=d;ds.appendChild(o);}); }
+  (function initG(){ var ts=document.getElementById('g_type'); if(ts) Object.keys(P3_TAX).forEach(function(k){var o=document.createElement('option');o.textContent=k;ts.appendChild(o);}); })();
+  // ---- Mã BĐS (demo) + mô hình hợp đồng & tồn kho ----
+  var MADD_DB=['CC0126000247','CC0126000248','CC0126000249','CC0126000250','CC0126000251','CC0126000312','CC0126000313','CC0126000420'];
+  (function fillDL(){ var dl=document.getElementById('maddDL'); if(dl) MADD_DB.forEach(function(c){var o=document.createElement('option');o.value=c;dl.appendChild(o);}); })();
+  var TONKHO_BASE=8;
+  var bdsList=[]; var contracts=[]; var editIndex=-1;
+  function usedMas(except){ var set={}; contracts.forEach(function(c,i){ if(i!==except && c.status!=='Hủy hợp đồng') c.mas.forEach(function(m){set[m]=1;}); }); return set; }
+  function bRender(){ var body=document.getElementById('bds_body'); if(!body) return; if(!bdsList.length){ body.innerHTML='<tr class="bds-empty"><td colspan="6" class="center" style="color:var(--muted);padding:14px">Chưa có BĐS — thêm ở trên.</td></tr>'; document.getElementById('bds_tong').textContent='0'; return; } var tong=0; body.innerHTML=bdsList.map(function(b,i){ tong+=b.tt; return '<tr><td class="center"><span class="tt">'+(i+1)+'</span></td><td>'+esc(b.ma)+'</td><td class="center">'+b.dt.toLocaleString('vi-VN')+'</td><td class="center">'+b.dg.toLocaleString('vi-VN')+'</td><td class="center">'+b.tt.toLocaleString('vi-VN')+'</td><td class="center"><button class="btn" style="padding:3px 8px" onclick="bRemove('+i+')" title="Xóa">🗑</button></td></tr>'; }).join(''); document.getElementById('bds_tong').textContent=tong.toLocaleString('vi-VN'); }
+  function bRemove(i){ bdsList.splice(i,1); bRender(); }
+  function bAdd(){ var ma=g7v('g_bma'); if(!ma){ toast('Nhập Mã BĐS'); return; } if(bdsList.some(function(b){return b.ma===ma;})){ toast('Mã BĐS đã có trong giao dịch này'); return; } if(usedMas(editIndex)[ma]){ toast('Mã BĐS "'+ma+'" đã thuộc một hợp đồng khác (còn hiệu lực)'); return; } var dt=num3(g7v('g_bdt')), dg=num3(g7v('g_bdg')); bdsList.push({ma:ma,dt:dt,dg:dg,tt:dt*dg}); ['g_bma','g_bdt','g_bdg'].forEach(function(id){document.getElementById(id).value='';}); bRender(); document.getElementById('g_bma').focus(); }
+  function resetGForm(){ bdsList=[]; bRender(); ['g_sohd','g_ten','g_cccd','g_sl','g_gcn','g_slgcn','g_type','g_detail','g_ht','g_status','g_bma','g_bdt','g_bdg'].forEach(function(id){var el=document.getElementById(id); if(el) el.value='';}); editIndex=-1; var b=document.getElementById('g_btn'); if(b) b.textContent='+ Ghi nhận giao dịch'; var n=document.getElementById('g_editnote'); if(n) n.style.display='none'; }
+  function t3fAdd(){ if(!g7v('g_type')||!g7v('g_detail')||!g7v('g_ht')||!g7v('g_ten')||!g7v('g_status')){ toast('Nhập đủ các trường bắt buộc (*)'); return; } if(!bdsList.length){ toast('Thêm ít nhất 1 BĐS vào giao dịch'); return; } var c={type:g7v('g_type'),detail:g7v('g_detail'),ht:g7v('g_ht'),sohd:g7v('g_sohd'),ten:g7v('g_ten'),cccd:g7v('g_cccd'),sl:g7v('g_sl'),status:g7v('g_status'),gcn:g7v('g_gcn'),slgcn:g7v('g_slgcn'),bds:bdsList.slice()}; c.mas=c.bds.map(function(b){return b.ma;}); c.tong=c.bds.reduce(function(a,b){return a+b.tt;},0); if(editIndex>=0){ contracts[editIndex]=c; toast('Đã lưu thay đổi hợp đồng'); } else { contracts.push(c); toast('Đã ghi nhận giao dịch'); } resetGForm(); renderContracts(); }
+  function editContract(i){ var c=contracts[i]; setVals({g_type:c.type}); t3fFillDetail(); setVals({g_detail:c.detail,g_ht:c.ht,g_sohd:c.sohd,g_ten:c.ten,g_cccd:c.cccd,g_sl:c.sl,g_status:c.status,g_gcn:c.gcn,g_slgcn:c.slgcn}); bdsList=c.bds.map(function(b){return {ma:b.ma,dt:b.dt,dg:b.dg,tt:b.tt};}); bRender(); editIndex=i; var b=document.getElementById('g_btn'); if(b) b.textContent='💾 Lưu thay đổi'; var n=document.getElementById('g_editnote'); if(n){ n.style.display=''; n.textContent='Đang sửa hợp đồng: '+(c.sohd||'(chưa có số HĐ)')+' — chỉnh xong bấm "Lưu thay đổi".'; } var p=document.getElementById('pane3'); if(p) p.scrollIntoView({behavior:'smooth'}); }
+  function delContract(i){ contracts.splice(i,1); if(editIndex===i) resetGForm(); renderContracts(); }
+  function gStatusChange(i,val){ contracts[i].status=val; renderContracts(); toast(val==='Hủy hợp đồng'?('Đã hủy hợp đồng — '+contracts[i].mas.length+' BĐS trả về tồn kho khả dụng'):'Đã cập nhật trạng thái'); }
+  function updateTonKho(){ var occ=0; contracts.forEach(function(c){ if(c.status!=='Hủy hợp đồng') occ+=c.mas.length; }); var el=document.getElementById('tonkho_ind'); if(el) el.textContent='Tồn kho khả dụng: '+(TONKHO_BASE-occ)+'  ·  Đã nghiệm thu: '+TONKHO_BASE+'  ·  Đã bán: '+occ; }
+  function renderContracts(){ var body=document.getElementById('g_body'); if(!body) return; if(!contracts.length){ body.innerHTML='<tr class="g-empty"><td colspan="14" class="center" style="color:var(--muted);padding:18px">Chưa có hợp đồng — nhập ở trên rồi bấm "Ghi nhận giao dịch".</td></tr>'; updateTonKho(); return; } body.innerHTML=contracts.map(function(c,i){ var sel='<select onchange="gStatusChange('+i+',this.value)" style="border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:12.5px;font-family:inherit">'+['Còn hiệu lực','Hủy hợp đồng'].map(function(o){return '<option'+(o===c.status?' selected':'')+'>'+o+'</option>';}).join('')+'</select>'; var dim=c.status==='Hủy hợp đồng'?' style="opacity:.55"':''; return '<tr'+dim+'><td class="center"><span class="tt">'+(i+1)+'</span></td><td>'+esc(c.type)+'</td><td>'+esc(c.detail)+'</td><td>'+esc(c.ht)+'</td><td>'+esc(c.sohd)+'</td><td>'+esc(c.mas.join('; '))+'</td><td>'+esc(c.ten)+'</td><td>'+esc(c.cccd)+'</td><td class="center">'+esc(c.sl)+'</td><td class="center">'+c.tong.toLocaleString('vi-VN')+'</td><td class="center">'+sel+'</td><td>'+esc(c.gcn)+'</td><td class="center">'+esc(c.slgcn)+'</td><td class="center" style="white-space:nowrap"><button class="btn" style="padding:4px 8px" onclick="editContract('+i+')" title="Sửa hợp đồng">✏️ Sửa</button> <button class="btn" style="padding:4px 8px" onclick="delContract('+i+')" title="Xóa">🗑</button></td></tr>'; }).join(''); updateTonKho(); }
+  contracts.push({type:'Nhà ở, đất ở thương mại',detail:'Chung cư',ht:'Bán',sohd:'HĐ-2026/0078',ten:'Nguyễn Văn A',cccd:'012345678901',sl:'2',status:'Còn hiệu lực',gcn:'',slgcn:'1',bds:[{ma:'CC0126000247',dt:80,dg:45,tt:3600},{ma:'CC0126000248',dt:75,dg:45,tt:3375}]});
+  contracts[0].mas=contracts[0].bds.map(function(b){return b.ma;}); contracts[0].tong=contracts[0].bds.reduce(function(a,b){return a+b.tt;},0);
+  renderContracts();
+
+  // ---- Nhóm 4: form → tự fill xuống bảng (theo loại nhà ở công vụ) ----
+  function p4Add(){
+    const type=document.getElementById('p4_type').value;
+    if(!type){ toast('Vui lòng chọn Loại nhà ở công vụ'); return; }
+    const v=id=>document.getElementById(id).value.trim();
+    const row=[...document.querySelectorAll('#p4_body tr')].find(r=>r.dataset.type===type);
+    if(!row){ toast('Không tìm thấy dòng phù hợp'); return; }
+    ['q1','q2','q3','q4','q5','q6'].forEach(k=>{ row.querySelector(`[data-f="${k}"]`).textContent=v('p4_'+k); });
+    row.querySelector('[data-f="note"]').textContent=v('p4_note');
+    row.style.transition='background .25s'; row.style.background='#e6f1ff';
+    setTimeout(()=>{ row.style.background=''; },1000);
+    ['p4_q1','p4_q2','p4_q3','p4_q4','p4_q5','p4_q6','p4_note'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('p4_type').value='';
+    toast('Đã cập nhật vào bảng: '+type);
+  }
+
+  // ---- Nhóm 5: form → thêm dòng vào bảng (cá nhân được hỗ trợ) ----
+  function p5Add(){
+    const prog=document.getElementById('p5_prog').value;
+    const name=document.getElementById('p5_name').value.trim();
+    const cccd=document.getElementById('p5_id').value.trim();
+    const addr=document.getElementById('p5_addr').value.trim();
+    if(!prog){ toast('Vui lòng chọn Tên chương trình hỗ trợ'); return; }
+    if(!name){ toast('Vui lòng nhập Họ và tên'); return; }
+    if(!cccd){ toast('Vui lòng nhập Số căn cước'); return; }
+    if(!addr){ toast('Vui lòng nhập Địa chỉ'); return; }
+    const body=document.getElementById('p5_body');
+    const empty=body.querySelector('.p5-empty'); if(empty) empty.remove();
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="center tt-cell"></td><td>${esc(prog)}</td><td>${esc(name)}</td><td>${esc(cccd)}</td><td>${esc(addr)}</td>`+
+      `<td class="center"><button class="btn" style="padding:4px 9px" onclick="this.closest('tr').remove();p5Renumber()" title="Xóa bản ghi">🗑</button></td>`;
+    body.appendChild(tr);
+    p5Renumber();
+    document.getElementById('p5_name').value=''; document.getElementById('p5_id').value=''; document.getElementById('p5_addr').value='';
+    toast('Đã thêm vào bảng');
+  }
+  function p5Renumber(){
+    const body=document.getElementById('p5_body');
+    const rows=[...body.querySelectorAll('tr')].filter(r=>!r.classList.contains('p5-empty'));
+    if(!rows.length){ body.innerHTML='<tr class="p5-empty"><td colspan="6" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — chọn chương trình, nhập thông tin rồi bấm "Cập nhật vào bảng".</td></tr>'; return; }
+    rows.forEach((r,i)=>{ const c=r.querySelector('.tt-cell'); if(c) c.innerHTML='<span class="tt">'+(i+1)+'</span>'; });
+  }
+
+  // ---- Nhóm 7: 2 tab con ----
+  function showSub7(s){
+    document.getElementById('sub7a').style.display = s==='a'?'':'none';
+    document.getElementById('sub7b').style.display = s==='b'?'':'none';
+    document.getElementById('s7a').classList.toggle('active',s==='a');
+    document.getElementById('s7b').classList.toggle('active',s==='b');
+  }
+  const g7v=id=>{const el=document.getElementById(id); return el?el.value.trim():'';};
+  function p7aFillObj(){
+    const obj=document.getElementById('a_obj').value;
+    const box=document.getElementById('a_obj_fields');
+    if(!obj){ box.innerHTML=''; return; }
+    const f = obj==='Cá nhân'
+      ? [['a_o1','Họ và tên chủ sở hữu'],['a_o2','Quốc tịch'],['a_o3','Số định danh cá nhân / Hộ chiếu']]
+      : [['a_o1','Tên tổ chức'],['a_o2','Giấy chứng nhận đăng ký đầu tư'],['a_o3','Số định danh tổ chức']];
+    box.innerHTML=f.map(([id,lbl])=>`<div class="field"><label>${lbl} <span class="req">*</span></label><input id="${id}" type="text" placeholder="Nhập liệu"></div>`).join('');
+  }
+  function p7aAdd(){
+    if(!g7v('a_cdt')||!g7v('a_da')||!g7v('a_diadiem')){ toast('Nhập đủ Thông tin dự án (chủ đầu tư, tên dự án, địa điểm)'); return; }
+    if(!g7v('a_canho')||!g7v('a_dt')||!g7v('a_pl')||!g7v('a_th')){ toast('Nhập đủ Thông tin BĐS bắt buộc'); return; }
+    const obj=g7v('a_obj');
+    if(!obj){ toast('Vui lòng chọn Đối tượng'); return; }
+    if(!g7v('a_o1')||!g7v('a_o2')||!g7v('a_o3')){ toast('Nhập đủ thông tin đối tượng'); return; }
+    const common=['a_cdt','a_da','a_diadiem','a_canho','a_madd','a_dt','a_pl','a_th','a_gh'];
+    const body=document.getElementById('p7a_body'); const e=body.querySelector('.p7a-empty'); if(e) e.remove();
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td class="center tt-cell"></td>'+common.map(c=>`<td>${esc(g7v(c))}</td>`).join('')+
+      `<td>${esc(obj)}</td><td>${esc(g7v('a_o1'))}</td><td>${esc(g7v('a_o2'))}</td><td>${esc(g7v('a_o3'))}</td>`+
+      `<td class="center"><button class="btn" style="padding:4px 9px" onclick="this.closest('tr').remove();p7aRenum()" title="Xóa bản ghi">🗑</button></td>`;
+    body.appendChild(tr); p7aRenum();
+    common.forEach(c=>document.getElementById(c).value='');
+    document.getElementById('a_obj').value=''; p7aFillObj();
+    toast('Đã thêm vào bảng');
+  }
+  function p7aRenum(){
+    const body=document.getElementById('p7a_body'); const rows=[...body.querySelectorAll('tr')].filter(r=>!r.classList.contains('p7a-empty'));
+    if(!rows.length){ body.innerHTML='<tr class="p7a-empty"><td colspan="15" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr>'; return; }
+    rows.forEach((r,i)=>{const c=r.querySelector('.tt-cell'); if(c) c.innerHTML='<span class="tt">'+(i+1)+'</span>';});
+  }
+  function p7bAdd(){
+    if(!g7v('b_cq')||!g7v('b_loai')||!g7v('b_sl')||!g7v('b_dt')){ toast('Nhập đủ Cơ quan, Loại nhà ở, Số lượng, Diện tích'); return; }
+    const cols=['b_cq','b_loai','b_sl','b_dt','b_t1','b_t2','b_t3','b_t4'];
+    const body=document.getElementById('p7b_body'); const e=body.querySelector('.p7b-empty'); if(e) e.remove();
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td class="center tt-cell"></td>'+cols.map((c,i)=>`<td${i>=2?' class="center"':''}>${esc(g7v(c))}</td>`).join('')+`<td class="center"><button class="btn" style="padding:4px 9px" onclick="this.closest('tr').remove();p7bRenum()" title="Xóa bản ghi">🗑</button></td>`;
+    body.appendChild(tr); p7bRenum();
+    cols.forEach(c=>document.getElementById(c).value='');
+    toast('Đã thêm vào bảng');
+  }
+  function p7bRenum(){
+    const body=document.getElementById('p7b_body'); const rows=[...body.querySelectorAll('tr')].filter(r=>!r.classList.contains('p7b-empty'));
+    if(!rows.length){ body.innerHTML='<tr class="p7b-empty"><td colspan="10" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr>'; return; }
+    rows.forEach((r,i)=>{const c=r.querySelector('.tt-cell'); if(c) c.innerHTML='<span class="tt">'+(i+1)+'</span>';});
+  }
+
+  // ---- Nhóm 8: cá nhân mua/thuê mua/thuê NƠXH ----
+  function d8AddMember(){
+    const list=document.getElementById('d8_hg_list');
+    const div=document.createElement('div');
+    div.className='field full hg-member';
+    div.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end">
+      <div class="field"><label>Họ và tên</label><input class="hg-name" type="text" placeholder="Nhập liệu"></div>
+      <div class="field"><label>Căn cước công dân / số định danh cá nhân</label><input class="hg-cccd" type="text" placeholder="Nhập liệu"></div>
+      <button class="btn" type="button" style="height:38px" onclick="this.closest('.hg-member').remove()" title="Xóa người này">🗑</button>
+    </div>`;
+    list.appendChild(div);
+  }
+  function p8Add(){
+    if(!g7v('d8_da')||!g7v('d8_diadiem')){ toast('Nhập đủ Thông tin dự án'); return; }
+    if(!g7v('d8_hoten')||!g7v('d8_diachi')||!g7v('d8_cccd')){ toast('Nhập đủ Họ tên, Địa chỉ và CCCD của cá nhân'); return; }
+    if(!g7v('d8_hinhthuc')){ toast('Chọn Hình thức (Mua / Thuê mua / Thuê)'); return; }
+    const members=[...document.querySelectorAll('#d8_hg_list .hg-member')]
+      .map(m=>({n:m.querySelector('.hg-name').value.trim(), c:m.querySelector('.hg-cccd').value.trim()}))
+      .filter(x=>x.n||x.c);
+    const hgN=members.map(x=>esc(x.n)).join('<br>');
+    const hgC=members.map(x=>esc(x.c)).join('<br>');
+    const vals=[g7v('d8_da'),g7v('d8_diadiem'),g7v('d8_hoten'),g7v('d8_diachi'),g7v('d8_cccd')];
+    const body=document.getElementById('p8_body'); const e=body.querySelector('.p8-empty'); if(e) e.remove();
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td class="center tt-cell"></td>'+vals.map(v=>`<td>${esc(v)}</td>`).join('')+
+      `<td>${hgN}</td><td>${hgC}</td><td class="center">${esc(g7v('d8_hinhthuc'))}</td>`+
+      `<td class="center"><button class="btn" style="padding:4px 9px" onclick="this.closest('tr').remove();p8Renum()" title="Xóa bản ghi">🗑</button></td>`;
+    body.appendChild(tr); p8Renum();
+    ['d8_da','d8_diadiem','d8_hoten','d8_diachi','d8_cccd'].forEach(c=>document.getElementById(c).value='');
+    document.getElementById('d8_hinhthuc').value='';
+    document.getElementById('d8_hg_list').innerHTML=''; d8AddMember();
+    toast('Đã thêm vào bảng');
+  }
+  function p8Renum(){
+    const body=document.getElementById('p8_body'); const rows=[...body.querySelectorAll('tr')].filter(r=>!r.classList.contains('p8-empty'));
+    if(!rows.length){ body.innerHTML='<tr class="p8-empty"><td colspan="10" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr>'; return; }
+    rows.forEach((r,i)=>{const c=r.querySelector('.tt-cell'); if(c) c.innerHTML='<span class="tt">'+(i+1)+'</span>';});
+  }
+
+  // ---- Nhóm 9: 2 tab con ----
+  function showSub9(s){
+    document.getElementById('sub9a').style.display=s==='a'?'':'none';
+    document.getElementById('sub9b').style.display=s==='b'?'':'none';
+    document.getElementById('s9a').classList.toggle('active',s==='a');
+    document.getElementById('s9b').classList.toggle('active',s==='b');
+  }
+  function e9aUpdLabel(){
+    const v=document.getElementById('e9a_loai').value;
+    const map={'Sàn giao dịch':'Tên Sàn giao dịch','Tổ chức kinh doanh dịch vụ môi giới':'Tên Tổ chức kinh doanh dịch vụ môi giới','Tổ chức kinh doanh dịch vụ tư vấn, quản lý bất động sản':'Tên Tổ chức kinh doanh dịch vụ tư vấn, quản lý bất động sản'};
+    document.getElementById('e9a_tenlabel').innerHTML=(map[v]||'Tên tổ chức / sàn giao dịch')+' <span class="req">*</span>';
+  }
+  function e9aAdd(){
+    if(!g7v('e9a_loai')){ toast('Chọn Loại hình'); return; }
+    if(!g7v('e9a_ten')||!g7v('e9a_sdtc')||!g7v('e9a_sdcn')||!g7v('e9a_diachi')||!g7v('e9a_tt')||!g7v('e9a_nvcc')){ toast('Nhập đủ các trường bắt buộc'); return; }
+    const cols=['e9a_loai','e9a_ten','e9a_sdtc','e9a_sdcn','e9a_diachi','e9a_tt','e9a_nv','e9a_nvcc'];
+    const body=document.getElementById('p9a_body'); const e=body.querySelector('.p9a-empty'); if(e) e.remove();
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td class="center tt-cell"></td>'+cols.map((c,i)=>`<td${i>=6?' class="center"':''}>${esc(g7v(c))}</td>`).join('')+`<td class="center"><button class="btn" style="padding:4px 9px" onclick="this.closest('tr').remove();e9aRenum()" title="Xóa bản ghi">🗑</button></td>`;
+    body.appendChild(tr); e9aRenum();
+    cols.forEach(c=>document.getElementById(c).value=''); e9aUpdLabel();
+    toast('Đã thêm vào bảng');
+  }
+  function e9aRenum(){
+    const body=document.getElementById('p9a_body'); const rows=[...body.querySelectorAll('tr')].filter(r=>!r.classList.contains('p9a-empty'));
+    if(!rows.length){ body.innerHTML='<tr class="p9a-empty"><td colspan="10" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr>'; return; }
+    rows.forEach((r,i)=>{const c=r.querySelector('.tt-cell'); if(c) c.innerHTML='<span class="tt">'+(i+1)+'</span>';});
+  }
+  const E9_TAX={
+    "Nhà ở thương mại":["Nhà ở (Biệt thự, liền kề và nhà ở độc lập)","Chung cư","Đất đã có hạ tầng kỹ thuật trong dự án BĐS cho cá nhân tự xây dựng nhà ở (phân lô, bán nền)"],
+    "Công trình thương mại, dịch vụ, văn phòng, trung tâm thương mại":["Văn phòng","Trung tâm thương mại","Văn phòng kết hợp lưu trú","Căn hộ lưu trú","Đất (dùng cho mục đích sản xuất, kinh doanh tại khu công nghiệp)"],
+    "Bất động sản du lịch":["Biệt thự du lịch","Căn hộ du lịch"],
+    "Bất động sản khu công nghiệp":["Nhà xưởng sản xuất","Đất (dùng cho mục đích sản xuất, kinh doanh tại khu công nghiệp)"],
+    "Các loại hình bất động sản khác":["Công trình y tế","Công trình giáo dục","Công trình văn hóa","Công trình thể dục thể thao","Công trình dịch vụ công cộng"]
+  };
+  (function e9bInit(){
+    const ts=document.getElementById('e9b_type');
+    if(ts) Object.keys(E9_TAX).forEach(k=>{const o=document.createElement('option');o.textContent=k;ts.appendChild(o);});
+  })();
+  function e9bFillDetail(){
+    const t=document.getElementById('e9b_type').value, ds=document.getElementById('e9b_detail');
+    ds.innerHTML='<option value="">-- Chọn --</option>';
+    (E9_TAX[t]||[]).forEach(d=>{const o=document.createElement('option');o.textContent=d;ds.appendChild(o);});
+  }
+  function e9bAdd(){
+    if(!g7v('e9b_type')||!g7v('e9b_detail')){ toast('Chọn Loại hình BĐS và Loại hình chi tiết'); return; }
+    if(!g7v('e9b_da')||!g7v('e9b_sl')||!g7v('e9b_dt')||!g7v('e9b_gia')){ toast('Nhập đủ Tên dự án, Số lượng, Diện tích, Giá bán/m²'); return; }
+    const cols=['e9b_type','e9b_detail','e9b_da','e9b_sl','e9b_dt','e9b_gia','e9b_gthd'];
+    const body=document.getElementById('p9b_body'); const e=body.querySelector('.p9b-empty'); if(e) e.remove();
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td class="center tt-cell"></td>'+cols.map((c,i)=>`<td${i>=3?' class="center"':''}>${esc(g7v(c))}</td>`).join('')+`<td class="center"><button class="btn" style="padding:4px 9px" onclick="this.closest('tr').remove();e9bRenum()" title="Xóa bản ghi">🗑</button></td>`;
+    body.appendChild(tr); e9bRenum();
+    ['e9b_da','e9b_sl','e9b_dt','e9b_gia','e9b_gthd'].forEach(c=>document.getElementById(c).value='');
+    toast('Đã thêm vào bảng');
+  }
+  function e9bRenum(){
+    const body=document.getElementById('p9b_body'); const rows=[...body.querySelectorAll('tr')].filter(r=>!r.classList.contains('p9b-empty'));
+    if(!rows.length){ body.innerHTML='<tr class="p9b-empty"><td colspan="9" class="center" style="color:var(--muted);padding:18px">Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".</td></tr>'; return; }
+    rows.forEach((r,i)=>{const c=r.querySelector('.tt-cell'); if(c) c.innerHTML='<span class="tt">'+(i+1)+'</span>';});
+  }
+
+  // ---- Helper chung cho bảng dạng "thêm dòng" ----
+  var LMSG='Chưa có dữ liệu — nhập ở trên rồi bấm "Cập nhật vào bảng".';
+  function listAdd(fields, bodyId, emptyCls, renumFn){
+    for(const f of fields){ if(f.req && !g7v(f.id)){ toast('Vui lòng nhập đủ các trường bắt buộc (*)'); return; } }
+    const body=document.getElementById(bodyId); const e=body.querySelector('.'+emptyCls); if(e) e.remove();
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td class="center tt-cell"></td>'+fields.map(f=>`<td${f.center?' class="center"':''}>${esc(g7v(f.id))}</td>`).join('')+
+      `<td class="center"><button class="btn" style="padding:4px 9px" onclick="this.closest('tr').remove();${renumFn}()" title="Xóa bản ghi">🗑</button></td>`;
+    body.appendChild(tr); window[renumFn]();
+    fields.forEach(f=>{const el=document.getElementById(f.id); if(el) el.value='';});
+    toast('Đã thêm vào bảng');
+    return true;
+  }
+  function listRenum(bodyId, emptyCls, colspan, msg){
+    const body=document.getElementById(bodyId); const rows=[...body.querySelectorAll('tr')].filter(r=>!r.classList.contains(emptyCls));
+    if(!rows.length){ body.innerHTML='<tr class="'+emptyCls+'"><td colspan="'+colspan+'" class="center" style="color:var(--muted);padding:18px">'+msg+'</td></tr>'; return; }
+    rows.forEach((r,i)=>{const c=r.querySelector('.tt-cell'); if(c) c.innerHTML='<span class="tt">'+(i+1)+'</span>';});
+  }
+  // Nhóm 10
+  function n10Add(){ listAdd([{id:'n10_sqd',req:1},{id:'n10_shcc',req:1},{id:'n10_ngaycap',req:1},{id:'n10_hoten',req:1},{id:'n10_sdd',req:1},{id:'n10_ns',req:1}],'p10_body','p10-empty','n10Renum'); }
+  function n10Renum(){ listRenum('p10_body','p10-empty',8,LMSG); }
+  // Nhóm 11
+  function n11Add(){ listAdd([{id:'n11_ten',req:1},{id:'n11_sdtc',req:1},{id:'n11_sdcn',req:1},{id:'n11_diachi',req:1},{id:'n11_file'}],'p11_body','p11-empty','n11Renum'); }
+  function n11Renum(){ listRenum('p11_body','p11-empty',7,LMSG); }
+  // Nhóm 12
+  function showSub12(s){
+    document.getElementById('sub12a').style.display=s==='a'?'':'none';
+    document.getElementById('sub12b').style.display=s==='b'?'':'none';
+    document.getElementById('s12a').classList.toggle('active',s==='a');
+    document.getElementById('s12b').classList.toggle('active',s==='b');
+  }
+  function n12aAdd(){ listAdd([{id:'n12a_ma',req:1},{id:'n12a_linhvuc',req:1},{id:'n12a_ten',req:1},{id:'n12a_sdd',req:1}],'p12a_body','p12a-empty','n12aRenum'); }
+  function n12aRenum(){ listRenum('p12a_body','p12a-empty',6,LMSG); }
+  function n12bAdd(){ listAdd([{id:'n12b_ten',req:1},{id:'n12b_hoten',req:1},{id:'n12b_sdd',req:1},{id:'n12b_chucdanh',req:1},{id:'n12b_qd',req:1}],'p12b_body','p12b-empty','n12bRenum'); }
+  function n12bRenum(){ listRenum('p12b_body','p12b-empty',7,LMSG); }
+  // Nhóm 15
+  function n15Add(){ listAdd([{id:'n15_loai',req:1},{id:'n15_thue',req:1}],'p15_body','p15-empty','n15Renum'); }
+  function n15Renum(){ listRenum('p15_body','p15-empty',4,LMSG); }
+  // Nhóm 17
+  function n17Add(){ listAdd([{id:'n17_ten',req:1},{id:'n17_tt',req:1,center:1},{id:'n17_sl',center:1},{id:'n17_tong',req:1,center:1}],'p17_body','p17-empty','n17Renum'); }
+  function n17Renum(){ listRenum('p17_body','p17-empty',6,LMSG); }
+  // Nhóm 19
+  const E19_TAX={
+    "Bất động sản nhà ở — Nhà ở thương mại":["Nhà ở riêng lẻ (nhà ở độc lập, biệt thự, liền kề)","Chung cư","Đất ở (theo hình thức phân lô, bán nền)"],
+    "Bất động sản nhà ở — Nhà ở xã hội":["Nhà ở riêng lẻ","Chung cư"],
+    "Bất động sản nhà ở — Nhà ở công nhân tại KCN, KCX":["Nhà chung cư"],
+    "Công trình thương mại, dịch vụ, văn phòng, trung tâm thương mại":["Văn phòng","Trung tâm thương mại","Văn phòng kết hợp lưu trú","Căn hộ lưu trú"],
+    "Bất động sản nghỉ dưỡng":["Biệt thự nghỉ dưỡng","Căn hộ du lịch"],
+    "Bất động sản công nghiệp":["Nhà xưởng sản xuất","Đất (dùng cho mục đích sản xuất, kinh doanh tại khu công nghiệp)"]
+  };
+  (function n19Init(){ const ts=document.getElementById('n19_type'); if(ts) Object.keys(E19_TAX).forEach(k=>{const o=document.createElement('option');o.textContent=k;ts.appendChild(o);}); })();
+  function n19FillDetail(){
+    const t=document.getElementById('n19_type').value, ds=document.getElementById('n19_detail');
+    ds.innerHTML='<option value="">-- Chọn --</option>';
+    (E19_TAX[t]||[]).forEach(d=>{const o=document.createElement('option');o.textContent=d;ds.appendChild(o);});
+  }
+  function n19Calc(){
+    const num=v=>{const n=parseFloat(String(v).replace(/[^\d.-]/g,''));return isNaN(n)?0:n;};
+    const dt=num(g7v('n19_dt')), gthd=num(g7v('n19_gthd'));
+    const gia=dt?(gthd/dt):0;
+    const el=document.getElementById('n19_gia'); if(el) el.value=gia?gia.toLocaleString('vi-VN',{maximumFractionDigits:2}):'';
+  }
+  function n19Add(){ listAdd([{id:'n19_type',req:1},{id:'n19_detail',req:1},{id:'n19_sohd',req:1},{id:'n19_madd'},{id:'n19_cccdban',req:1},{id:'n19_cccdmua',req:1},{id:'n19_sl',req:1,center:1},{id:'n19_dt',req:1,center:1},{id:'n19_gia',center:1},{id:'n19_gthd',req:1,center:1},{id:'n19_lhgd',req:1},{id:'n19_cc',req:1,center:1}],'p19_body','p19-empty','n19Renum'); }
+  function n19Renum(){ listRenum('p19_body','p19-empty',14,LMSG); }
+
+  // ---- Dữ liệu mẫu minh hoạ cho các bảng ----
+  function setVals(o){ Object.keys(o).forEach(id=>{const el=document.getElementById(id); if(el) el.value=o[id];}); }
+  (function seedSamples(){
+    // Nhóm 4 — điền dòng Biệt thự
+    const r4=[...document.querySelectorAll('#p4_body tr')].find(r=>r.dataset.type==='Biệt thự');
+    if(r4){ const m={q1:'12',q2:'3.600',q3:'8',q4:'2.400',q5:'25',q6:'120'}; Object.keys(m).forEach(k=>{const c=r4.querySelector(`[data-f="${k}"]`); if(c) c.textContent=m[k];}); const n=r4.querySelector('[data-f="note"]'); if(n) n.textContent='Khu A'; }
+    // Nhóm 5
+    setVals({p5_prog:'MA - Hỗ trợ nhà ở cho người có công với cách mạng, thân nhân liệt sĩ',p5_name:'Nguyễn Văn A',p5_id:'012345678901',p5_addr:'Số 1, P. Phương Đông, TP. Uông Bí, Quảng Ninh'});
+    if(typeof p5Add==='function') p5Add();
+    // Nhóm 7A
+    setVals({a_cdt:'Công ty TNHH ĐTXD đô thị Phương Đông',a_da:'Van Bay Tower',a_diadiem:'Đông Triều, Quảng Ninh',a_canho:'A-1203',a_madd:'BDS-0001',a_dt:'85',a_pl:'Đã được cấp giấy chứng nhận',a_th:'50 năm',a_gh:'Chưa được gia hạn',a_obj:'Cá nhân'});
+    if(typeof p7aFillObj==='function'){ p7aFillObj(); setVals({a_o1:'Kim Min-jun',a_o2:'Hàn Quốc',a_o3:'M12345678'}); p7aAdd(); }
+    // Nhóm 7B
+    setVals({b_cq:'Sở Xây dựng tỉnh Quảng Ninh',b_loai:'Nhà ở công vụ',b_sl:'30',b_dt:'2.100',b_t1:'18',b_t2:'5',b_t3:'2',b_t4:'5'});
+    if(typeof p7bAdd==='function') p7bAdd();
+    // Nhóm 8
+    if(typeof d8AddMember==='function' && !document.querySelector('#d8_hg_list .hg-member')) d8AddMember();
+    setVals({d8_da:'Khu nhà ở xã hội Đông Xá',d8_diadiem:'Vân Đồn, Quảng Ninh',d8_hoten:'Trần Thị B',d8_diachi:'Thôn 2, xã Đông Xá, Vân Đồn, Quảng Ninh',d8_cccd:'012987654321',d8_hinhthuc:'Mua'});
+    const m8=document.querySelector('#d8_hg_list .hg-member');
+    if(m8){ m8.querySelector('.hg-name').value='Trần Văn C'; m8.querySelector('.hg-cccd').value='012987650000'; }
+    if(typeof p8Add==='function') p8Add();
+    // Nhóm 9A
+    setVals({e9a_loai:'Sàn giao dịch'}); if(typeof e9aUpdLabel==='function') e9aUpdLabel();
+    setVals({e9a_ten:'Sàn giao dịch BĐS Phương Đông',e9a_sdtc:'0112345008',e9a_sdcn:'012345678901',e9a_diachi:'TP. Hạ Long, Quảng Ninh',e9a_tt:'Đang hoạt động',e9a_nv:'25',e9a_nvcc:'10'});
+    if(typeof e9aAdd==='function') e9aAdd();
+    // Nhóm 9B
+    setVals({e9b_type:'Nhà ở thương mại'}); if(typeof e9bFillDetail==='function') e9bFillDetail();
+    setVals({e9b_detail:'Chung cư',e9b_da:'Van Bay Tower',e9b_sl:'120',e9b_dt:'9.600',e9b_gia:'45',e9b_gthd:'432.000'});
+    if(typeof e9bAdd==='function') e9bAdd();
+    // Nhóm 2
+    setVals({n2_prov:'Toàn quốc',n2_kv:'Đô thị',n2_kc:'85',n2_tkc:'15',n2_cc:'12',n2_rl:'88'}); if(typeof n2Add==='function') n2Add();
+    // Nhóm 10
+    setVals({n10_sqd:'QĐ-123/SXD',n10_shcc:'MG-000123',n10_ngaycap:'2026-03-20',n10_hoten:'Lê Văn D',n10_sdd:'012345670123',n10_ns:'1990-05-12'}); if(typeof n10Add==='function') n10Add();
+    // Nhóm 11
+    setVals({n11_ten:'Trung tâm đào tạo BĐS Phương Đông',n11_sdtc:'0112345009',n11_sdcn:'012345670456',n11_diachi:'TP. Hạ Long, Quảng Ninh',n11_file:'GCN-DKDN.pdf'}); if(typeof n11Add==='function') n11Add();
+    // Nhóm 12A
+    setVals({n12a_ma:'QLVH-0001',n12a_linhvuc:'Lĩnh vực xây dựng',n12a_ten:'Nguyễn Văn E',n12a_sdd:'012300000001'}); if(typeof n12aAdd==='function') n12aAdd();
+    // Nhóm 12B
+    setVals({n12b_ten:'Ban quản trị chung cư Van Bay Tower',n12b_hoten:'Hoàng Văn I',n12b_sdd:'012300000010',n12b_chucdanh:'Trưởng ban',n12b_qd:'QD-BQT-2026.pdf'}); if(typeof n12bAdd==='function') n12bAdd();
+    // Nhóm 15
+    setVals({n15_loai:'Đất ở đô thị',n15_thue:'1.250'}); if(typeof n15Add==='function') n15Add();
+    // Nhóm 17
+    setVals({n17_ten:'CTCP BĐS Phương Đông',n17_tt:'Trong nước',n17_sl:'500',n17_tong:'500.000'}); if(typeof n17Add==='function') n17Add();
+    // Nhóm 19
+    setVals({n19_type:'Bất động sản nhà ở — Nhà ở thương mại'}); if(typeof n19FillDetail==='function') n19FillDetail();
+    setVals({n19_detail:'Chung cư',n19_sohd:'HĐ-2026/001',n19_madd:'BDS-0001',n19_cccdban:'012300001111',n19_cccdmua:'012300002222',n19_sl:'1',n19_dt:'80',n19_gthd:'3.600'});
+    if(typeof n19Calc==='function') n19Calc();
+    setVals({n19_lhgd:'Mua bán',n19_cc:'Công chứng'});
+    if(typeof n19Add==='function') n19Add();
+    // ẩn toast còn sót sau khi seed
+    const t=document.getElementById('toast'); if(t) t.classList.remove('show');
+  })();
+
+</script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded',function(){
+      var CHEV='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>';
+      document.querySelectorAll('.card').forEach(function(card){
+        var head=card.querySelector(':scope > .head'); if(!head) return;
+        var h3=head.querySelector('h3'); var isSummary=h3 && /Bảng tổng hợp/i.test(h3.textContent);
+        if(!head.getAttribute('onclick')){
+          head.style.cursor='pointer';
+          if(!head.querySelector('.chev')) head.insertAdjacentHTML('beforeend', CHEV);
+          head.addEventListener('click', function(e){ if(e.target.closest('button,select,input,a,textarea,label')) return; card.classList.toggle('collapsed'); });
+        }
+        if(!isSummary && !card.closest('#pane3')) card.classList.add('collapsed'); // auto đóng khối nhập liệu (trừ Nhóm 3 - mở sẵn)
+      });
+    });
+    </script>
+</body>
+</html>
