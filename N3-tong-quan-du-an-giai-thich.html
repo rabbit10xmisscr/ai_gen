@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biểu N3 — Tổng quan về dự án · Giải thích cơ chế tính (để BA confirm)</title>
+<style>
+  :root {
+    --navy: #1e3a5f; --navy-light: #2c5282; --green: #276749; --green-bg: #e6efe2;
+    --amber: #92400e; --amber-bg: #fef3c7; --red: #9b2c2c; --red-bg: #fed7d7;
+    --border: #cbd5e0; --muted: #64748b; --code-bg: #f1f5f9;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: #1a202c;
+    line-height: 1.55; margin: 0; padding: 0 0 80px; background: #f8fafc; }
+  header { background: var(--navy); color: #fff; padding: 28px 40px; }
+  header h1 { margin: 0 0 6px; font-size: 22px; }
+  header p { margin: 0; opacity: .85; font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin: 22px 0 8px; font-size: 13px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  .dot.ok { background: var(--green); } .dot.warn { background: var(--amber); } .dot.chk { background: var(--navy-light); }
+  .note-top { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--navy-light);
+    padding: 14px 18px; border-radius: 6px; margin: 16px 0 28px; font-size: 14px; }
+  .note-top b { color: var(--navy); }
+
+  .card { background: #fff; border: 1px solid var(--border); border-radius: 8px;
+    margin: 0 0 22px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+  .card-head { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px;
+    background: var(--navy); color: #fff; }
+  .stt { flex: 0 0 34px; height: 34px; border-radius: 50%; background: #fff; color: var(--navy);
+    font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .card-head h2 { margin: 0; font-size: 17px; flex: 1; }
+  .status-tag { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; white-space: nowrap; align-self: center; }
+  .status-tag.ok { background: var(--green-bg); color: var(--green); }
+  .status-tag.warn { background: var(--amber-bg); color: var(--amber); }
+  .status-tag.done { background: var(--green); color: #fff; }
+
+  .card-body { padding: 18px 20px; }
+  .row { display: grid; grid-template-columns: 150px 1fr; gap: 8px 16px; margin-bottom: 12px; }
+  .row:last-child { margin-bottom: 0; }
+  .row .k { font-weight: 600; color: var(--muted); font-size: 13px; padding-top: 2px; }
+  .row .v { font-size: 14px; }
+  .formula { background: var(--code-bg); border: 1px solid #e2e8f0; border-radius: 6px;
+    padding: 12px 14px; font-family: "SF Mono", Consolas, monospace; font-size: 13px; line-height: 1.5; }
+  code { background: var(--code-bg); border: 1px solid #e2e8f0; border-radius: 4px;
+    padding: 1px 6px; font-family: "SF Mono", Consolas, monospace; font-size: 12.5px; color: var(--navy-light); }
+  .path { color: var(--green); }
+  .src { display: inline-block; background: #eef2ff; color: #3730a3; border-radius: 4px;
+    padding: 1px 8px; font-size: 12px; font-weight: 600; margin-right: 6px; }
+  .row.fe { background: var(--green-bg); border-radius: 6px; padding: 10px 12px; grid-template-columns: 150px 1fr; }
+  .row.fe .k { color: var(--green); }
+  .row.fe .v { color: #22543d; }
+  .tab-chip { display: inline-block; background: var(--green); color: #fff; border-radius: 4px;
+    padding: 1px 8px; font-size: 12px; font-weight: 600; margin-right: 6px; }
+  .fld { font-weight: 600; }
+  .example { border-top: 1px dashed var(--border); margin-top: 14px; padding-top: 12px; font-size: 13px; }
+  .example .lbl { font-weight: 700; color: var(--navy); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  table.ex { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 12.5px; }
+  table.ex th, table.ex td { border: 1px solid var(--border); padding: 5px 8px; text-align: left; }
+  table.ex th { background: #f1f5f9; }
+  table.ex td.hit { background: var(--green-bg); font-weight: 600; }
+  table.ex td.miss { color: #94a3b8; }
+
+  .confirm { background: var(--amber-bg); border: 1px solid #f0d98a; border-radius: 6px;
+    padding: 11px 14px; margin-top: 14px; font-size: 13.5px; }
+  .confirm .lbl { font-weight: 700; color: var(--amber); }
+  .confirm ul { margin: 6px 0 0; padding-left: 20px; }
+  .confirm li { margin: 3px 0; }
+
+  .decision { background: #fff; border: 2px solid var(--navy); border-radius: 8px;
+    padding: 18px 22px; margin: 34px 0; }
+  .decision h3 { margin: 0 0 10px; color: var(--navy); }
+  .decision table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  .decision th, .decision td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+  .decision th { background: var(--navy); color: #fff; }
+  .decision .yn { text-align: center; font-weight: 700; width: 120px; }
+
+  footer { max-width: 1100px; margin: 30px auto 0; padding: 16px 24px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Biểu N3 — “Tổng quan về dự án”: giải thích cơ chế tính 6 chỉ tiêu</h1>
+  <p>Tài liệu để BA rà soát &amp; confirm công thức TRƯỚC khi dev viết API. Nguồn: Dữ liệu nhóm 3 (biểu N3), lưu JSONB tại <code style="color:#cbd5e0;background:transparent;border-color:#4a5568">bds_report.submission_data.data</code>.</p>
+</header>
+
+<main>
+  <div class="legend">
+    <span><i class="dot ok"></i> Tính được chính xác từ dữ liệu đang có</span>
+    <span><i class="dot warn"></i> Tính được nhưng có điểm cần BA quyết định</span>
+    <span><i class="dot chk"></i> = cần confirm</span>
+  </div>
+
+  <div class="note-top">
+    <b>Đơn vị đếm & phạm vi:</b> mỗi chỉ tiêu đếm <b>số Mã định danh dự án (duy nhất)</b> —
+    field <code class="path">data.ma_dinh_danh_du_an_dau_tu_xay_dung</code> — thỏa điều kiện tương ứng.
+    Tập dữ liệu quét: các submission biểu <b>N3</b> ở trạng thái <b>đã duyệt (APPROVED)</b>, <code>is_current = true</code>, theo kỳ báo cáo được chọn.
+    <br><b>Lưu ý về “tab”:</b> tài liệu này gọi tab <b>theo tên</b> (không dùng số) để tránh nhầm. Ánh xạ tên tab ↔ bảng dữ liệu:
+    <table class="ex" style="margin-top:8px;max-width:720px">
+      <tr><th>Tab (theo tên trên form)</th><th>Số tab (file công thức BA)</th><th>Bảng dữ liệu (DB)</th></tr>
+      <tr><td>Thông tin chung</td><td>Tab 1</td><td><code>sec_11</code> (bảng “Thông tin quy mô”)</td></tr>
+      <tr><td>Hồ sơ pháp lý dự án</td><td>Tab 2</td><td><code>sec_12</code></td></tr>
+      <tr><td>BĐS đủ điều kiện kinh doanh</td><td>Tab 3</td><td><code>sec_14</code></td></tr>
+      <tr><td>Tiến độ triển khai</td><td>Tab 4</td><td><code>sec_13</code></td></tr>
+      <tr><td>Chuyển nhượng</td><td>Tab 5</td><td><code>qmcn_body</code>, <code>sec_17</code> + scalar</td></tr>
+    </table>
+    <div style="margin-top:6px;font-size:13px;color:var(--red)"><b>Lưu ý:</b> “Lũy kế số lượng hoàn thành” nằm ở tab <b>“Tiến độ triển khai” (Tab 4)</b>, không phải Tab 3.
+    Số tab và section code <b>không cùng thứ tự</b> (Tab 3 → sec_14; Tab 4 → sec_13).</div>
+  </div>
+
+  <div class="note-top" style="border-left-color:var(--green)">
+    <b style="color:var(--green)">Phạm vi theo đơn vị — API public, có 2 chế độ (BA yêu cầu):</b>
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li><b>Gọi public (không có đăng nhập / không có Security Context):</b> đếm <b>TẤT CẢ dự án toàn hệ thống</b>, không lọc theo đơn vị.</li>
+      <li><b>Gọi có Security Context (đã đăng nhập):</b> chỉ đếm dự án thuộc <b>đơn vị hiện tại</b> của người gọi (<code>orgId</code>/<code>tenantId</code> lấy từ token).</li>
+    </ul>
+    <div style="margin-top:6px;font-size:13px;color:var(--muted)">→ Cùng 1 endpoint, tự nhận biết có/không có context để quyết định lọc theo đơn vị hay không.</div>
+  </div>
+
+  <!-- 1 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="stt">1</div>
+      <h2>Số lượng dự án được chấp thuận chủ trương đầu tư</h2>
+      <span class="status-tag done">✔ ĐÃ CHỐT</span>
+    </div>
+    <div class="card-body">
+      <div class="row"><div class="k">Công thức BA</div><div class="v">Nhóm 3 → tab <b>“Hồ sơ pháp lý dự án”</b> (Tab 2). Đếm Mã số dự án (duy nhất) <b>có đính kèm file</b> tại trường “Quyết định chủ trương đầu tư / chấp thuận chủ trương đầu tư / chấp thuận đầu tư dự án BĐS” <b>+ có “Ngày cấp”</b>.</div></div>
+      <div class="row fe"><div class="k">Trên form nhập</div><div class="v"><span class="tab-chip">Tab “Hồ sơ pháp lý dự án”</span> Nhóm <b>I. Thông tin về dự án bất động sản</b> → dòng <span class="fld">“Quyết định chủ trương đầu tư hoặc chấp thuận chủ trương đầu tư hoặc chấp thuận đầu tư dự án bất động sản”</span> → có file ở cột <span class="fld">“Đính kèm (PDF)”</span> và có <span class="fld">“Ngày cấp”</span>.</div></div>
+      <div class="row"><div class="k">Nguồn dữ liệu (DB)</div><div class="v"><span class="src">sec_12</span> Bảng “Hồ sơ pháp lý dự án” (<code class="path">data.sec_12</code>) — bảng dòng cố định. <b>Dòng #1</b> = tài liệu này.</div></div>
+      <div class="row"><div class="k">Điều kiện</div><div class="v">Dòng có <code>dinh_kem_pdf</code> ≠ rỗng <b>HOẶC</b> <code>ngay_cap</code> ≠ rỗng (chỉ cần 1 trong 2). Dòng được nhận diện <b>theo tên tài liệu</b>, không theo vị trí.</div></div>
+      <div class="row"><div class="k">Cơ chế tính</div><div class="v">
+        <div class="formula">row = dòng trong sec_12 có <span class="path">ten_tai_lieu</span> LIKE
+      '%chấp thuận chủ trương đầu tư%' (hoặc “chủ trương đầu tư”)
+COUNT(DISTINCT <span class="path">ma_dinh_danh_du_an_dau_tu_xay_dung</span>)
+WHERE row.<span class="path">dinh_kem_pdf</span> có ≥ 1 file
+   OR row.<span class="path">ngay_cap</span> IS NOT NULL</div>
+      </div></div>
+      <div class="example">
+        <span class="lbl">Ví dụ (điều kiện OR — chỉ cần 1 trong 2)</span>
+        <table class="ex">
+          <tr><th>Mã dự án</th><th>dinh_kem_pdf</th><th>ngay_cap</th><th>Được đếm?</th></tr>
+          <tr><td>DA-001</td><td>[qd-ctdt.pdf]</td><td>2025-03-10</td><td class="hit">✔ Có (đủ cả 2)</td></tr>
+          <tr><td>DA-002</td><td class="miss">[] (chưa đính kèm)</td><td>2025-04-01</td><td class="hit">✔ Có (có ngày cấp)</td></tr>
+          <tr><td>DA-003</td><td>[qd.pdf]</td><td class="miss">(trống)</td><td class="hit">✔ Có (có file)</td></tr>
+          <tr><td>DA-004</td><td class="miss">[]</td><td class="miss">(trống)</td><td class="miss">✘ Không (không có gì)</td></tr>
+        </table>
+        <div style="margin-top:6px">→ Kết quả = <b>3</b> dự án.</div>
+      </div>
+      <div class="confirm" style="background:var(--green-bg);border-color:#9ae6b4">
+        <span class="lbl" style="color:var(--green)">✔ BA đã chốt:</span>
+        <ul>
+          <li><b>Nhận diện tài liệu theo TÊN</b> (<code>ten_tai_lieu</code>), <b>không theo index dòng</b> → an toàn khi form đổi thứ tự dòng.</li>
+          <li>Điều kiện đếm = <b>chỉ cần 1 trong 2</b> (có file HOẶC có ngày cấp).</li>
+          <li><b>API phải trả về cả 2 thông tin</b> (danh sách dự án kèm ngày cấp), vì Cổng sẽ có <b>bộ lọc theo thời gian</b> (ngày cấp). → Response không chỉ là con số tổng, mà kèm được ngày cấp để lọc.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="stt">2</div>
+      <h2>SL Dự án được cấp phép xây dựng</h2>
+      <span class="status-tag done">✔ ĐÃ CHỐT</span>
+    </div>
+    <div class="card-body">
+      <div class="row"><div class="k">Công thức BA</div><div class="v">Nhóm 3 → tab <b>“Hồ sơ pháp lý dự án”</b> (Tab 2). Đếm Mã số dự án (duy nhất) <b>có đính kèm file</b> tại trường “Giấy phép xây dựng đối với trường hợp phải cấp giấy phép xây dựng” <b>+ có “Ngày cấp”</b>.</div></div>
+      <div class="row fe"><div class="k">Trên form nhập</div><div class="v"><span class="tab-chip">Tab “Hồ sơ pháp lý dự án”</span> Nhóm <b>II. Thông tin về nhà ở, công trình xây dựng hình thành trong tương lai</b> → dòng <span class="fld">“Giấy phép xây dựng đối với trường hợp phải cấp giấy phép xây dựng”</span> → có file ở cột <span class="fld">“Đính kèm (PDF)”</span> và có <span class="fld">“Ngày cấp”</span>.</div></div>
+      <div class="row"><div class="k">Nguồn dữ liệu (DB)</div><div class="v"><span class="src">sec_12</span> <code class="path">data.sec_12</code> — dòng có <code>ten_tai_lieu</code> = “Giấy phép xây dựng…” (nhận diện theo tên).</div></div>
+      <div class="row"><div class="k">Cơ chế tính</div><div class="v">
+        <div class="formula">row = dòng trong sec_12 có <span class="path">ten_tai_lieu</span> LIKE '%giấy phép xây dựng%'
+COUNT(DISTINCT <span class="path">ma_dinh_danh_du_an_dau_tu_xay_dung</span>)
+WHERE row.<span class="path">dinh_kem_pdf</span> có ≥ 1 file
+   OR row.<span class="path">ngay_cap</span> IS NOT NULL</div>
+      </div></div>
+      <div class="confirm" style="background:var(--green-bg);border-color:#9ae6b4">
+        <span class="lbl" style="color:var(--green)">✔ BA đã chốt (áp dụng chung như chỉ tiêu 1):</span>
+        <ul>
+          <li>Nhận diện tài liệu <b>theo TÊN</b> <code>ten_tai_lieu</code> (LIKE “giấy phép xây dựng”), không theo index.</li>
+          <li>Điều kiện = <b>1 trong 2</b> (file HOẶC ngày cấp).</li>
+          <li>API trả kèm <b>ngày cấp</b> để Cổng lọc theo thời gian.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="stt">3</div>
+      <h2>Số dự án đang triển khai xây dựng</h2>
+      <span class="status-tag done">✔ ĐÃ CHỐT</span>
+    </div>
+    <div class="card-body">
+      <div class="row"><div class="k">Công thức BA</div><div class="v">Nhóm 3 → tab <b>“Thông tin chung”</b> (Tab 1) + tab <b>“Tiến độ triển khai”</b> (Tab 4). Đếm Mã số dự án (duy nhất) có <b>tổng “Số lượng” (tab Thông tin chung) &gt; “Lũy kế số lượng hoàn thành” (tab Tiến độ triển khai)</b> → dự án chưa hoàn thành hết = đang triển khai.</div></div>
+      <div class="row fe"><div class="k">Trên form nhập</div><div class="v">
+        <span class="tab-chip">Tab “Thông tin chung”</span> bảng <b>“Thông tin quy mô”</b> → cột <span class="fld">“Số lượng”</span> (cộng tất cả loại hình BĐS).<br>
+        <span class="tab-chip">Tab “Tiến độ triển khai”</span> → cột <span class="fld">“Lũy kế số lượng hoàn thành”</span> (cộng tất cả loại hình).
+      </div></div>
+      <div class="row"><div class="k">Nguồn dữ liệu (DB)</div><div class="v">
+        <span class="src">sec_11</span> “Số lượng” quy mô: <code class="path">data.sec_11[*].so_luong</code><br>
+        <span class="src">sec_13</span> Lũy kế hoàn thành: <code class="path">data.sec_13[*].luy_ke_so_luong_hoan_thanh</code>
+      </div></div>
+      <div class="row"><div class="k">Cơ chế tính</div><div class="v">
+        <div class="formula">Với mỗi dự án:
+  tong_quy_mo   = SUM(<span class="path">sec_11[*].so_luong</span>)
+  luy_ke_ht     = SUM(<span class="path">sec_13[*].luy_ke_so_luong_hoan_thanh</span>)
+COUNT(DISTINCT dự án) WHERE tong_quy_mo &gt; luy_ke_ht</div>
+      </div></div>
+      <div class="example">
+        <span class="lbl">Ví dụ</span>
+        <table class="ex">
+          <tr><th>Mã dự án</th><th>Σ Số lượng (sec_11)</th><th>Σ Lũy kế hoàn thành (sec_13)</th><th>Đếm “đang triển khai”?</th></tr>
+          <tr><td>DA-001</td><td>200</td><td>120</td><td class="hit">✔ 200 &gt; 120</td></tr>
+          <tr><td>DA-002</td><td>150</td><td>150</td><td class="miss">✘ bằng nhau → đã hoàn thành</td></tr>
+        </table>
+      </div>
+      <div class="confirm" style="background:var(--green-bg);border-color:#9ae6b4">
+        <span class="lbl" style="color:var(--green)">✔ Đã rõ (từ chốt của chỉ tiêu 4):</span>
+        <ul>
+          <li><b>Đính chính số tab:</b> “Lũy kế số lượng hoàn thành” ở tab <b>“Tiến độ triển khai” (Tab 4)</b> = <code>sec_13</code>. (Tab 3 = “BĐS đủ điều kiện kinh doanh” = sec_14.)</li>
+          <li><b>KHÔNG loại trừ</b> dự án có <code>luy_ke_ht = 0</code>/chưa nhập → vẫn tính “đang triển khai” (vì Σ quy mô &gt; 0 = luy_ke). Có <b>ràng buộc validate</b>: Σ lũy kế ≤ Σ quy mô (xem chỉ tiêu 4).</li>
+        </ul>
+      </div>
+      <div class="confirm" style="background:var(--green-bg);border-color:#9ae6b4">
+        <span class="lbl" style="color:var(--green)">✔ BA đã chốt:</span>
+        <ul>
+          <li>Dùng cột <b>lũy kế</b> <code>luy_ke_so_luong_hoan_thanh</code> (KHÔNG dùng cột kỳ này <code>so_luong_hoan_thanh</code>).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="stt">4</div>
+      <h2>Số dự án đã hoàn thành đưa vào sử dụng</h2>
+      <span class="status-tag done">✔ ĐÃ CHỐT</span>
+    </div>
+    <div class="card-body">
+      <div class="row"><div class="k">Công thức BA</div><div class="v">Nhóm 3 → tab <b>“Thông tin chung”</b> (Tab 1) + tab <b>“Tiến độ triển khai”</b> (Tab 4). Đếm Mã số dự án (duy nhất) có <b>tổng “Số lượng” = “Lũy kế số lượng hoàn thành”</b> → đã hoàn thành 100%.</div></div>
+      <div class="row fe"><div class="k">Trên form nhập</div><div class="v">Giống chỉ tiêu 3: <span class="tab-chip">Tab “Thông tin chung”</span> cột <span class="fld">“Số lượng”</span> so với <span class="tab-chip">Tab “Tiến độ triển khai”</span> cột <span class="fld">“Lũy kế số lượng hoàn thành”</span> — nhưng lấy dự án <b>bằng nhau</b> (đã hoàn thành hết).</div></div>
+      <div class="row"><div class="k">Cơ chế tính</div><div class="v">
+        <div class="formula">Với mỗi dự án:
+  tong_quy_mo = SUM(<span class="path">sec_11[*].so_luong</span>)
+  luy_ke_ht   = SUM(<span class="path">sec_13[*].luy_ke_so_luong_hoan_thanh</span>)
+COUNT(DISTINCT dự án) WHERE tong_quy_mo = luy_ke_ht</div>
+      </div></div>
+      <div class="confirm" style="background:var(--green-bg);border-color:#9ae6b4">
+        <span class="lbl" style="color:var(--green)">✔ BA đã chốt:</span>
+        <ul>
+          <li><b>KHÔNG loại trừ</b> dự án có tổng số lượng = 0. Cứ tính đúng công thức <code>tong_quy_mo = luy_ke_ht</code> (kể cả 0 = 0). Đây là do dữ liệu người dùng nhập vào — không xử lý ngoại lệ ở API.</li>
+          <li><b>Thay vì loại trừ, bổ sung RÀNG BUỘC ở khâu nhập liệu (validate):</b> tổng lũy kế cuối cùng của tab <b>“Tiến độ triển khai”</b> (<code>sec_13.luy_ke_so_luong_hoan_thanh</code>) <b>và</b> tab <b>“BĐS đủ điều kiện kinh doanh”</b> (<code>sec_14.luy_ke_so_luong_du_dieu_kien_kinh_doanh</code>) <b>không được lớn hơn</b> tổng “Số lượng” của tab <b>“Thông tin chung”</b> (<code>sec_11.so_luong</code>). → Đảm bảo không bao giờ xảy ra Σ lũy kế &gt; Σ quy mô, nên chỉ tiêu 3 + 4 luôn phủ kín mọi dự án.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="stt">5</div>
+      <h2>Số lượng dự án được chuyển nhượng toàn bộ hoặc một phần</h2>
+      <span class="status-tag done">✔ ĐÃ CHỐT</span>
+    </div>
+    <div class="card-body">
+      <div class="row"><div class="k">Công thức BA</div><div class="v">Nhóm 3 → tab <b>“Chuyển nhượng”</b> (Tab 5). Đếm Mã số dự án (duy nhất) <b>có thông tin chuyển nhượng được khai báo tại tab này</b>.</div></div>
+      <div class="row fe"><div class="k">Trên form nhập</div><div class="v"><span class="tab-chip">Tab “Chuyển nhượng”</span> — người nhập đã điền thông tin chuyển nhượng: <span class="fld">“Tên chủ đầu tư nhận chuyển nhượng”</span>, <span class="fld">“Số quyết định cho phép chuyển nhượng”</span>, bảng <span class="fld">“Quy mô chuyển nhượng”</span>…</div></div>
+      <div class="row"><div class="k">Nguồn dữ liệu (DB)</div><div class="v"><span class="src">Tab “Chuyển nhượng”</span> scalar <code class="path">data.ten_chu_dau_tu_nhan_chuyen_nhuong</code>, <code class="path">data.so_quyet_dinh_cho_phep_chuyen_nhuong</code>… và bảng <code class="path">data.qmcn_body</code>, <code class="path">data.sec_17</code>.</div></div>
+      <div class="row"><div class="k">Cơ chế tính</div><div class="v">
+        <div class="formula">COUNT(DISTINCT <span class="path">ma_dinh_danh_du_an_dau_tu_xay_dung</span>)
+WHERE <span class="path">so_quyet_dinh_cho_phep_chuyen_nhuong</span> IS NOT NULL AND &lt;&gt; ''</div>
+      </div></div>
+      <div class="example">
+        <span class="lbl">Ví dụ</span>
+        <table class="ex">
+          <tr><th>Mã dự án</th><th>so_quyet_dinh_cho_phep_chuyen_nhuong</th><th>Được đếm?</th></tr>
+          <tr><td>DA-001</td><td>123/QĐ-UBND</td><td class="hit">✔ Có (có số QĐ)</td></tr>
+          <tr><td>DA-002</td><td class="miss">(trống)</td><td class="miss">✘ Không (dù có nhập field khác ở tab)</td></tr>
+        </table>
+      </div>
+      <div class="confirm" style="background:var(--green-bg);border-color:#9ae6b4">
+        <span class="lbl" style="color:var(--green)">✔ BA đã chốt — điều kiện “đã khai báo chuyển nhượng”:</span>
+        <ul>
+          <li>Đếm khi trường <b>“Số quyết định cho phép chuyển nhượng”</b> (<code>so_quyet_dinh_cho_phep_chuyen_nhuong</code>) <b>có dữ liệu</b> (≠ rỗng).</li>
+          <li>Chỉ căn cứ <b>duy nhất</b> trường này — KHÔNG xét các trường khác của tab, KHÔNG xét bảng <code>qmcn_body</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="card">
+    <div class="card-head">
+      <div class="stt">6</div>
+      <h2>Số lượng BĐS đủ điều kiện đưa vào KD</h2>
+      <span class="status-tag done">✔ ĐÃ CHỐT</span>
+    </div>
+    <div class="card-body">
+      <div class="row"><div class="k">Công thức BA</div><div class="v">Nhóm 3 → tab <b>“BĐS đủ điều kiện kinh doanh”</b> (Tab 3). <b>Tổng “Lũy kế số lượng đủ điều kiện kinh doanh” của tất cả dự án.</b></div></div>
+      <div class="row fe"><div class="k">Trên form nhập</div><div class="v"><span class="tab-chip">Tab “BĐS đủ điều kiện kinh doanh”</span> → cột <span class="fld">“Lũy kế số lượng đủ điều kiện kinh doanh”</span>, cộng tất cả dòng (mọi loại hình BĐS) của tất cả dự án.</div></div>
+      <div class="row"><div class="k">Nguồn dữ liệu (DB)</div><div class="v"><span class="src">sec_14</span> Bảng “BĐS đủ điều kiện kinh doanh”: <code class="path">data.sec_14[*].luy_ke_so_luong_du_dieu_kien_kinh_doanh</code>.</div></div>
+      <div class="row"><div class="k">Khác biệt quan trọng</div><div class="v">Chỉ tiêu này <b>đếm số BĐS (cộng dồn số lượng)</b>, KHÔNG phải đếm số dự án như 5 chỉ tiêu trên.</div></div>
+      <div class="row"><div class="k">Cơ chế tính</div><div class="v">
+        <div class="formula">SUM( <span class="path">sec_14[*].luy_ke_so_luong_du_dieu_kien_kinh_doanh</span> )
+  trên TẤT CẢ dự án (mọi dòng, mọi loại hình BĐS)</div>
+      </div></div>
+      <div class="confirm" style="background:var(--green-bg);border-color:#9ae6b4">
+        <span class="lbl" style="color:var(--green)">✔ BA đã chốt:</span>
+        <ul>
+          <li>Dùng cột <b>lũy kế</b> <code>luy_ke_so_luong_du_dieu_kien_kinh_doanh</code> (KHÔNG dùng cột kỳ này <code>so_luong_du_dieu_kien_kinh_doanh</code>).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decision summary -->
+  <div class="decision">
+    <h3>Bảng chốt nhanh cho BA (điền Đúng/Sai)</h3>
+    <table>
+      <tr><th>#</th><th>Điểm cần chốt</th><th class="yn">Đúng / Sai / Sửa</th></tr>
+      <tr style="background:var(--green-bg)"><td>1–2</td><td><b>✔ ĐÃ CHỐT.</b> Nhận diện tài liệu pháp lý (chấp thuận CTĐT, GPXD) <b>theo TÊN</b> <code>ten_tai_lieu</code> (không theo index). Điều kiện đếm = có file <b>HOẶC</b> có ngày cấp (1 trong 2). API trả kèm <b>ngày cấp</b> để Cổng lọc theo thời gian.</td><td class="yn">✔</td></tr>
+      <tr style="background:var(--green-bg)"><td>4</td><td><b>✔ ĐÃ CHỐT.</b> “Đã hoàn thành” = Σ số lượng (sec_11) <b>=</b> Σ lũy kế hoàn thành (sec_13). <b>KHÔNG</b> loại dự án Σ = 0. Thêm <b>ràng buộc validate nhập liệu</b>: Σ lũy kế (sec_13 & sec_14) ≤ Σ số lượng (sec_11) → chỉ tiêu 3+4 luôn phủ kín.</td><td class="yn">✔</td></tr>
+      <tr style="background:var(--green-bg)"><td>3</td><td><b>✔ ĐÃ CHỐT.</b> “Đang triển khai” = Σ số lượng (sec_11) <b>&gt;</b> Σ lũy kế hoàn thành (sec_13). Dùng cột <b>lũy kế</b> <code>luy_ke_so_luong_hoan_thanh</code>.</td><td class="yn">✔</td></tr>
+      <tr style="background:var(--green-bg)"><td>5</td><td><b>✔ ĐÃ CHỐT.</b> “Có chuyển nhượng” = trường <code>so_quyet_dinh_cho_phep_chuyen_nhuong</code> có dữ liệu (≠ rỗng). Chỉ căn cứ duy nhất trường này.</td><td class="yn">✔</td></tr>
+      <tr style="background:var(--green-bg)"><td>6</td><td><b>✔ ĐÃ CHỐT.</b> Chỉ tiêu này là <b>tổng số lượng BĐS</b> (không phải số dự án), lấy cột <b>lũy kế</b> <code>luy_ke_so_luong_du_dieu_kien_kinh_doanh</code>.</td><td class="yn">✔</td></tr>
+      <tr style="background:var(--green-bg)"><td>*</td><td><b>✔ ĐÃ CHỐT.</b> API <b>public</b>: không có Security Context → đếm <b>tất cả</b> (toàn hệ thống); có Security Context → đếm theo <b>đơn vị hiện tại</b>. Chỉ tính submission N3 <b>đã duyệt</b>, bản hiện hành, theo kỳ báo cáo.</td><td class="yn">✔</td></tr>
+    </table>
+  </div>
+
+  <footer>
+    Sau khi BA confirm nốt chỉ tiêu 3–6, dev sẽ hiện thực 1 API <b>public</b>:
+    <code>GET /api/v1/public/bds/n3/tong-quan-du-an?ky=</code> — trả 6 con số trong 1 response.
+    Với chỉ tiêu 1–2, response kèm <b>danh sách dự án + ngày cấp</b> để Cổng lọc theo thời gian.
+    Endpoint tự nhận biết Security Context: <b>không có</b> → đếm tất cả; <b>có</b> → lọc theo đơn vị hiện tại.
+    Field/section codes lấy từ <code>BDS_Design/metadata/n3-backend-mapping.json</code> &amp; <code>n3-data.json</code>.
+  </footer>
+</main>
+</body>
+</html>

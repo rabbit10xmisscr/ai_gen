@@ -1,0 +1,80 @@
+{
+  "info": {
+    "name": "BĐS N3 - Tổng quan về dự án",
+    "description": "API biểu N3 (Dữ liệu nhóm 3) - 6 chỉ tiêu tổng quan về dự án.\n\n## Biến\n- `{{domain}}`: host gateway (vd `https://dmp.example.gov.vn`).\n- `{{token}}`: JWT, được tự set sau khi gọi **Login**.\n\n## Phạm vi dữ liệu (quan trọng)\n- **KHÔNG có token** → API trả số liệu **TOÀN HỆ THỐNG** (tất cả đơn vị).\n- **CÓ token** (đã login) → API trả số liệu **theo đơn vị hiện tại** của người dùng.\n\nĐể lấy theo đơn vị: chạy **Login** trước (tự lưu `{{token}}`), rồi gọi **Tổng quan** — request đã kèm header `Authorization: Bearer {{token}}`. Để lấy toàn hệ thống: xoá/để trống `{{token}}` (hoặc dùng request *Tổng quan (public, không token)*).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "domain", "value": "https://dmp357.moc.gov.vn/", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Tự lưu token vào biến {{token}} nếu response có. Điều chỉnh đường dẫn field cho khớp API login thật.",
+              "let json;",
+              "try { json = pm.response.json(); } catch (e) { json = {}; }",
+              "const data = json.data || json;",
+              "const token = data.token || data.accessToken || data.access_token || json.token || json.access_token;",
+              "if (token) {",
+              "  pm.collectionVariables.set('token', token);",
+              "  console.log('Đã lưu token vào {{token}}');",
+              "} else {",
+              "  console.warn('Không tìm thấy token trong response — kiểm tra lại field và sửa script này.');",
+              "}",
+              "pm.test('Login 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"...\",\n  \"password\": \"...\"\n}"
+        },
+        "url": {
+          "raw": "{{domain}}/api/v1/auth/login",
+          "host": [ "{{domain}}" ],
+          "path": [ "api", "v1", "auth", "login" ]
+        },
+        "description": "Đăng nhập lấy JWT. Test script tự lưu token vào `{{token}}`. Sau khi login, request *Tổng quan* sẽ lọc theo đơn vị của người dùng này."
+      }
+    },
+    {
+      "name": "Tổng quan về dự án (theo token nếu có)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "description": "Có token → lọc theo đơn vị hiện tại. Bỏ header/để trống {{token}} → toàn hệ thống." }
+        ],
+        "url": {
+          "raw": "{{domain}}/report_api_v2/api/v1/public/bds/n3/tong-quan-du-an",
+          "host": [ "{{domain}}" ],
+          "path": [ "report_api_v2", "api", "v1", "public", "bds", "n3", "tong-quan-du-an" ]
+        },
+        "description": "6 chỉ tiêu tổng quan N3.\n- Có token (đã Login) → chỉ đếm dự án của **đơn vị hiện tại**.\n- Không token → **toàn hệ thống**.\n\nResponse `data`: `chap_thuan_chu_truong`, `cap_phep_xay_dung`, `dang_trien_khai`, `da_hoan_thanh`, `chuyen_nhuong`, `bds_du_dieu_kien_kd`, và `danh_sach_chap_thuan_chu_truong` / `danh_sach_cap_phep_xay_dung` (mỗi phần tử `{ma_du_an, ngay_cap}` để lọc theo thời gian)."
+      }
+    },
+    {
+      "name": "Tổng quan về dự án (public, không token)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{domain}}/report_api_v2/api/v1/public/bds/n3/tong-quan-du-an",
+          "host": [ "{{domain}}" ],
+          "path": [ "report_api_v2", "api", "v1", "public", "bds", "n3", "tong-quan-du-an" ]
+        },
+        "description": "Gọi KHÔNG kèm token → luôn trả số liệu **toàn hệ thống** (tất cả đơn vị), dùng cho Cổng công khai."
+      }
+    }
+  ]
+}
