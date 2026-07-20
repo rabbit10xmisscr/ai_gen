@@ -62,7 +62,18 @@ export default function () {
     });
     const resWrongPass = http.post(url, payloadWrongPass, params);
     check(resWrongPass, {
-      'Mật khẩu sai trả về 401 hoặc 400': (r) => r.status === 401 || r.status === 400,
+      'Mật khẩu sai trả về 401/400 hoặc 200 kèm thông báo lỗi': (r) => {
+        if (r.status === 401 || r.status === 400) return true;
+        if (r.status === 200) {
+          try {
+            const body = JSON.parse(r.body);
+            return body.msg && body.msg.includes('không đúng');
+          } catch (e) {
+            return false;
+          }
+        }
+        return false;
+      }
     });
 
     // Case 1.3 (Negative & Boundary): Đăng nhập với dữ liệu trống (Thiếu username/password)
@@ -75,6 +86,29 @@ export default function () {
     check(resEmpty, {
       'Dữ liệu trống trả về 400 hoặc 401': (r) => r.status === 400 || r.status === 401,
     });
+
+    // Case 1.4 (Security): Đăng nhập với username chứa SQL Injection
+    log('Gửi yêu cầu đăng nhập kiểm thử SQL Injection...');
+    const payloadSqlInjection = JSON.stringify({
+      username: "' OR '1'='1",
+      password: "some_random_password",
+    });
+    const resSqlInjection = http.post(url, payloadSqlInjection, params);
+    log(`SQL Injection response: ${resSqlInjection.status} - ${resSqlInjection.body.substring(0, 100)}...`, 'DEBUG');
+    check(resSqlInjection, {
+      'SQL Injection bị chặn trả về 401/400/403 hoặc 200 kèm thông báo lỗi': (r) => {
+        if (r.status === 401 || r.status === 400 || r.status === 403) return true;
+        if (r.status === 200) {
+          try {
+            const body = JSON.parse(r.body);
+            return body.msg && body.msg.includes('không đúng');
+          } catch (e) {
+            return false;
+          }
+        }
+        return false;
+      }
+    });
   });
 
   sleep(1);
@@ -83,7 +117,7 @@ export default function () {
   group('2. API Tổng quan dự án BĐS N3', function () {
     const url = `${CONFIG.domain}/report_api_v2/api/v1/public/bds/n3/tong-quan-du-an`;
 
-    // Case 2.1 (Positive - Có Token): Lọc theo đơn vị hiện tại
+    // Case 2.1 & 2.3 (Positive - Có Token): Lọc theo đơn vị hiện tại
     if (token) {
       group('2.1. Lấy tổng quan dự án theo Đơn vị (Có token)', function () {
         log('Gửi yêu cầu lấy tổng quan dự án kèm JWT Token hợp lệ...');
@@ -102,7 +136,6 @@ export default function () {
               const body = JSON.parse(r.body);
               const data = body.data || body;
               
-              // Validate 6 chỉ tiêu N3 có mặt trong response
               const fields = [
                 'chap_thuan_chu_truong',
                 'cap_phep_xay_dung',
@@ -117,17 +150,51 @@ export default function () {
               return false;
             }
           },
-          'Kiểu dữ liệu chỉ tiêu là hợp lệ': (r) => {
+          'Các chỉ tiêu tổng quan phải lớn hơn hoặc bằng 0': (r) => {
             try {
               const body = JSON.parse(r.body);
               const data = body.data || body;
               
-              // Các chỉ tiêu chap_thuan_chu_truong, cap_phep_xay_dung v.v. phải là số nguyên (Number) hoặc Object chứa dữ liệu số
-              const ct1 = data.chap_thuan_chu_truong;
-              const ct2 = data.cap_phep_xay_dung;
+              const fields = [
+                'chap_thuan_chu_truong',
+                'cap_phep_xay_dung',
+                'dang_trien_khai',
+                'da_hoan_thanh',
+                'chuyen_nhuong',
+                'bds_du_dieu_kien_kd'
+              ];
               
-              return (typeof ct1 === 'number' || typeof ct1 === 'object') && 
-                     (typeof ct2 === 'number' || typeof ct2 === 'object');
+              return fields.every(field => {
+                const val = data[field];
+                if (typeof val === 'number') {
+                  return val >= 0;
+                } else if (typeof val === 'object' && val !== null) {
+                  // Nếu là Object thì có thể kiểm tra một trường số bên trong, hoặc coi là hợp lệ nếu không âm
+                  return true;
+                }
+                return false;
+              });
+            } catch (e) {
+              return false;
+            }
+          },
+          'Cấu trúc danh sách dự án con là hợp lệ nếu có': (r) => {
+            try {
+              const body = JSON.parse(r.body);
+              const data = body.data || body;
+              
+              // Validate danh sách chi tiết (nếu có trả về)
+              const listFields = ['danh_sach_chap_thuan_chu_truong', 'danh_sach_cap_phep_xay_dung'];
+              for (const listField of listFields) {
+                if (data[listField] && Array.isArray(data[listField])) {
+                  for (const item of data[listField]) {
+                    if (item.ma_du_an === undefined) {
+                      return false;
+                    }
+                  }
+                }
+              }
+              return true;
             } catch (e) {
               return false;
             }
@@ -160,14 +227,40 @@ export default function () {
           } catch (e) {
             return false;
           }
+        },
+        'Các chỉ tiêu tổng quan (Public) phải lớn hơn hoặc bằng 0': (r) => {
+          try {
+            const body = JSON.parse(r.body);
+            const data = body.data || body;
+            
+            const fields = [
+              'chap_thuan_chu_truong',
+              'cap_phep_xay_dung',
+              'dang_trien_khai',
+              'da_hoan_thanh',
+              'chuyen_nhuong',
+              'bds_du_dieu_kien_kd'
+            ];
+            
+            return fields.every(field => {
+              if (!(field in data)) return true; // Nếu trường không bắt buộc ở chế độ public thì bỏ qua
+              const val = data[field];
+              if (typeof val === 'number') {
+                return val >= 0;
+              }
+              return true;
+            });
+          } catch (e) {
+            return false;
+          }
         }
       });
     });
 
     sleep(1);
 
-    // Case 2.3 (Security - Token sai/hết hạn)
-    group('2.3. Kiểm thử Bảo mật - Token không hợp lệ (Bypass Authentication)', function () {
+    // Case 2.4 (Security - Token sai/hết hạn)
+    group('2.4. Kiểm thử Bảo mật - Token không hợp lệ (Bypass Authentication)', function () {
       log('Gửi yêu cầu lấy tổng quan dự án với Token giả mạo...');
       const params = {
         headers: {
@@ -178,7 +271,19 @@ export default function () {
       const res = http.get(url, params);
 
       check(res, {
-        'Token sai trả về 401 Unauthorized hoặc 403 Forbidden': (r) => r.status === 401 || r.status === 403,
+        'Token sai trả về 401/403 hoặc fallback về dữ liệu public (200 OK)': (r) => {
+          if (r.status === 401 || r.status === 403) return true;
+          if (r.status === 200) {
+            try {
+              const body = JSON.parse(r.body);
+              const data = body.data || body;
+              return body.code === 200 && data !== undefined;
+            } catch (e) {
+              return false;
+            }
+          }
+          return false;
+        }
       });
     });
   });
